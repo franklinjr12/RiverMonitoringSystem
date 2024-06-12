@@ -12,6 +12,7 @@ def send_data(data):
     client_socket.close()
 
 if __name__ == "__main__":
+    # data_to_send = "123\0"
     data_to_send = "HelloHelloHelloHelloHelloHelloHelloHelloHello\n\0"
     send_data(data_to_send)
 

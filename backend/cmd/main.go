@@ -3,14 +3,15 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"goriver/internal/devicemessage"
+	"goriver/internal/deviceauth"
 	"net"
 	"os"
-	"unsafe"
+	"time"
 )
 
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
+	conn.SetDeadline(time.Now().Add(1 * time.Second))
 	fmt.Println("Client connected:", conn.RemoteAddr())
 	var err error
 
@@ -18,10 +19,14 @@ func handleConnection(conn net.Conn) {
 	reader := bufio.NewReader(conn)
 	var incomeBytes []byte
 	incomeBytes, _ = reader.ReadBytes(0)
-	var packetHeader devicemessage.Header
-	headerSize := int(unsafe.Sizeof(packetHeader))
-	fmt.Println("len: ", len(incomeBytes), " header: ", headerSize)
-	if len(incomeBytes) < headerSize {
+
+	if err = deviceauth.AuthenticateDeviceMessage(incomeBytes); err != nil {
+		fmt.Println("AuthenticateDeviceMessage: ", err)
+		_, err = conn.Write([]byte("Unauthorized"))
+		if err != nil {
+			fmt.Println("Error writing to client:", err)
+			return
+		}
 		return
 	}
 
