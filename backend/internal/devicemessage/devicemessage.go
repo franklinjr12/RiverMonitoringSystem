@@ -9,10 +9,18 @@ import (
 type Header struct {
 	DeviceId  uint64
 	AuthToken [16]byte
-	Version   uint32
+	Version   uint32 // used to decode the rest of the data in tcp packet
 }
 
 const HEADERSIZE = 28
+
+type SensorData struct {
+	Level       float32
+	Temperature float32
+	Pressure    float32
+}
+
+const SENSORDATASIZE = 12
 
 func ExtractHeader(packet []byte) (Header, error) {
 	var header Header
