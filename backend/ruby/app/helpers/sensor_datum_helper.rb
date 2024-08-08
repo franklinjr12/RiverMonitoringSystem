@@ -1,0 +1,2 @@
+module SensorDatumHelper
+end
