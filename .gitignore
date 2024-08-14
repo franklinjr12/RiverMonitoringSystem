@@ -33,3 +33,5 @@ backend/ruby/public/assets
 
 # Ignore master key for decrypting credentials and more.
 backend/ruby/config/master.key
+
+frontend/node_modules
