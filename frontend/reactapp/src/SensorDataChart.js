@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const SensorDataChart = ({ dataSource }) => {
+const SensorDataChart = ({ dataSource, deviceId }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3000/sensor_datum/index?device_id=1')
+    fetch(`http://localhost:3000/sensor_datum/index?device_id=${deviceId}`)	
       .then(response => response.json())
       .then(data => {
         const sensorData = data[dataSource].map(item => ({

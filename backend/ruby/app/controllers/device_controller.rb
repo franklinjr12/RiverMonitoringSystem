@@ -1,5 +1,7 @@
 class DeviceController < ApplicationController
   # ignores authentication for now
+  before_action :set_cors_headers
+
   def index
     devices = Device.where(user: params[:user_id])
     if devices.empty?
@@ -10,5 +12,11 @@ class DeviceController < ApplicationController
       { id: id, name: name, location: location }
     end
     render json: devices
+  end
+  
+  private
+
+  def set_cors_headers
+    response.set_header('Access-Control-Allow-Origin', '*')
   end
 end
