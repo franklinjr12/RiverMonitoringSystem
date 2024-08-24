@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const SensorDataChart = ({ dataSource, deviceId }) => {
+const SensorDataChart = ({ dataSource, deviceId, startDate = null, endDate = null }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/sensor_datum/index?device_id=${deviceId}`)	
+    let url = `http://localhost:3000/sensor_datum/index?device_id=${deviceId}`;
+    if (startDate && endDate) {
+      url += `&start_date=${startDate}&end_date=${endDate}`;
+    }
+
+    fetch(url)
       .then(response => response.json())
       .then(data => {
         const sensorData = data[dataSource].map(item => ({
@@ -15,7 +20,7 @@ const SensorDataChart = ({ dataSource, deviceId }) => {
         setData(sensorData);
       })
       .catch(error => console.error('Error fetching data:', error));
-  }, [dataSource]);
+  }, [dataSource, deviceId, startDate, endDate]);
 
   return (
     <ResponsiveContainer width="100%" height={400}>
