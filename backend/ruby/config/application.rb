@@ -24,16 +24,5 @@ module App
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
     # 
-    
-    # the below didn't work
-    # config.middleware.use Rack::Cors do
-    #   allow do
-    #     origins '*'
-    #     resource '*',
-    #             headers: :any,
-    #             expose: %w(access-token expiry token-type uid client),
-    #             methods: %i(post)
-    #   end
-    # end
   end
 end

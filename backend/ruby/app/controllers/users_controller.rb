@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
     # ignores authentication for now
-    # before_action :set_cors_headers
     skip_before_action :verify_authenticity_token
 
   def create
@@ -25,8 +24,6 @@ class UsersController < ApplicationController
 
   def set_cors_headers
     response.set_header('Access-Control-Allow-Origin', '*')
-    # response.set_header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-    # response.set_header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
   end
 
   def user_params
