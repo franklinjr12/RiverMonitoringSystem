@@ -3,6 +3,7 @@ import './App.css';
 import SensorDataChart from './SensorDataChart';
 import Devices from './Devices';
 import DeviceSensors from './DeviceSensors';
+import UserLogin from './UserLogin';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <main>
         <Router>
           <Routes>
+            <Route path="/login" element={<UserLogin />} />
             <Route path="/" element={<Devices />} />
             <Route path="/device-sensors/:deviceId" element={<DeviceSensors />} />
           </Routes>
