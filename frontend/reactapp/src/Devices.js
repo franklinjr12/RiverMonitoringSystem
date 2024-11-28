@@ -18,7 +18,8 @@ const Devices = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://localhost:3000/device/index?user_id=1')
+    const userId = localStorage.getItem('userId');
+    fetch('http://localhost:3000/device/index?user_id=' + userId)
       .then(response => response.json())
       .then(data => setDevices(data))
       .catch(error => console.error('Error fetching devices:', error));
@@ -26,29 +27,36 @@ const Devices = () => {
 
   const handleCardClick = (deviceId) => {
     navigate(`/device-sensors/${deviceId}`);
-    // navigate('/device-sensors');
   };
 
   return (
-    <Grid container spacing={3}>
-      {devices.map(device => (
-        <Grid item xs={12} sm={6} md={4} key={device.id}>
-          <Card 
-            style={{ margin: '20px', padding: '20px', cursor: 'pointer' }} 
-            onClick={() => handleCardClick(device.id)}
-          >
-            <CardContent>
-              <Typography variant="h5" component="h2">
-                {device.name}
-              </Typography>
-              <Typography color="textSecondary">
-                Location: {device.location}
-              </Typography>
-            </CardContent>
-          </Card>
+    <div>
+      {devices.length > 0 ? (
+        <Grid container spacing={3}>
+          {devices.map(device => (
+            <Grid item xs={12} sm={6} md={4} key={device.id}>
+              <Card 
+                style={{ margin: '20px', padding: '20px', cursor: 'pointer' }} 
+                onClick={() => handleCardClick(device.id)}
+              >
+                <CardContent>
+                  <Typography variant="h5" component="h2">
+                    {device.name}
+                  </Typography>
+                  <Typography color="textSecondary">
+                    Location: {device.location}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
         </Grid>
-      ))}
-    </Grid>
+      ) : (
+        <Typography variant="h6" component="p">
+          No devices found.
+        </Typography>
+      )}
+    </div>
   );
 };
 

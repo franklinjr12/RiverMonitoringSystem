@@ -12,7 +12,6 @@ const UserLogin = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
           },
           body: JSON.stringify({
             user:{
@@ -30,6 +29,8 @@ const UserLogin = () => {
               return;
             }
             alert("Login successful");
+            localStorage.setItem('userId', data["id"]);
+            window.location.href = '/devices';
           })
           .catch((error) => {
             console.error('Error:', error);

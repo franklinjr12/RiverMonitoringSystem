@@ -12,8 +12,9 @@ function App() {
       <main>
         <Router>
           <Routes>
+            <Route path="/" element={<UserLogin />} />
             <Route path="/login" element={<UserLogin />} />
-            <Route path="/" element={<Devices />} />
+            <Route path="/devices" element={<Devices />} />
             <Route path="/device-sensors/:deviceId" element={<DeviceSensors />} />
           </Routes>
         </Router>

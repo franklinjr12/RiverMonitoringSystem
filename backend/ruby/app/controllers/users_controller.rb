@@ -22,11 +22,8 @@ class UsersController < ApplicationController
 
   private
 
-  def set_cors_headers
-    response.set_header('Access-Control-Allow-Origin', '*')
-  end
-
   def user_params
     params.require(:user).permit(:username, :password)
   end
+  
 end
