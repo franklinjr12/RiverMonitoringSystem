@@ -3,7 +3,7 @@ import React from 'react';
 
 const HomeButton = () => {
     return (
-        <button onClick={() => window.location.href = '/'}>
+        <button onClick={() => window.location.href = '/devices'}>
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
             <path d="M12 2L2 12h3v10h14V12h3z"/>
         </svg>
