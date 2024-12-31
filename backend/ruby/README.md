@@ -10,6 +10,8 @@ Things you may want to cover:
 * System dependencies
 
 * Configuration
+For building the docker image: docker build -t river_monitoring_system:latest .
+For running: docker run --add-host=host.docker.internal:host-gateway -it river_monitoring_system
 
 * Database creation
 

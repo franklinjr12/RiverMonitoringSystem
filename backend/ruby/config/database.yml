@@ -21,12 +21,14 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: postgres
   password: postgres
+  host: host.docker.internal # using localhost database for now
+  port: 5432
 
 
 development:
   <<: *default
   database: <%= "#{ENV['DB_PREFIX']}_development" %>
-  # database: <%= "rivermonitoring_development" %>
+  # database: rivermonitoring_development
 
   # The specified database role being used to connect to PostgreSQL.
   # To create additional roles in PostgreSQL see `$ createuser --help`.
