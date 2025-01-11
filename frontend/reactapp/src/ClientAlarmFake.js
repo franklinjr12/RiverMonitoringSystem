@@ -18,7 +18,9 @@ const CLientAlarmFake = () => {
                 <table>
                     <thead>
                         <tr>
+                            <th>Alarm ID</th>
                             <th>Device ID</th>
+                            <th>Location</th>
                             <th>Condition</th>
                             <th>Endpoint</th>
                         </tr>
@@ -26,7 +28,9 @@ const CLientAlarmFake = () => {
                     <tbody>
                         {alarms.map(alarm => (
                             <tr key={alarm.id}>
-                                <td>{1}</td>
+                                <td>{alarm.id}</td>
+                                <td>1</td>
+                                <td>{alarm.location}</td>
                                 <td>{alarm.condition}</td>
                                 <td>{alarm.endpoint}</td>
                             </tr>

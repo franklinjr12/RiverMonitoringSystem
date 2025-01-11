@@ -6,13 +6,14 @@ class AlarmController < ApplicationController
 
   def index
     if params[:device_id].present?
-      data = Alarm.where(device: params[:device_id])
+      device = Device.find(params[:device_id])
+      data = Alarm.where(device: device)
       if data.empty?
         render json: { error: "No alarm found for the specified device" }, status: :bad_request
         return
       end
-      data = data.pluck(:trigger_condition, :notification_endpoint).map do |condition, endpoint|
-        { condition: condition, endpoint: endpoint }
+      data = data.pluck(:id, :trigger_condition, :notification_endpoint).map do |alarm_id, condition, endpoint|
+        { id: alarm_id, location: device.location, condition: condition, endpoint: endpoint }
       end
       render json: data
     else
