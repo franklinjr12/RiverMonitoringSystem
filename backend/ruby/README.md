@@ -11,7 +11,8 @@ Things you may want to cover:
 
 * Configuration
 For building the docker image: docker build -t river_monitoring_system:latest .
-For running: docker run --add-host=host.docker.internal:host-gateway -it river_monitoring_system
+For running: docker run -p 3000:3000 --add-host=host.docker.internal:host-gateway -it river_monitoring_system
+For running console on container: docker exec -it ID bin/rails c
 
 * Database creation
 

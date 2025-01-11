@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root to: redirect('http://localhost:3001/') # Redirect to frontend for convenience
   get 'sensor_datum/index'
   get 'device/index'
   get 'alarm/index'

@@ -29,10 +29,19 @@ const Devices = () => {
     navigate(`/device-sensors/${deviceId}`);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('userId');
+    navigate('/login');
+  }
+
   return (
     <div>
+      <nav style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', backgroundColor: '#f5f5f5' }}>
+        <Typography variant="h6">Device Monitoring System</Typography>
+        <button style={{ padding: '10px', cursor: 'pointer' }} onClick={handleLogout}>Logout</button>
+      </nav>
       {devices.length > 0 ? (
-        <Grid container spacing={3}>
+        <Grid container spacing={3} style={{ marginTop: '20px' }}>
           {devices.map(device => (
             <Grid item xs={12} sm={6} md={4} key={device.id}>
               <Card 
@@ -52,7 +61,7 @@ const Devices = () => {
           ))}
         </Grid>
       ) : (
-        <Typography variant="h6" component="p">
+        <Typography variant="h6" component="p" style={{ marginTop: '20px' }}>
           No devices found.
         </Typography>
       )}

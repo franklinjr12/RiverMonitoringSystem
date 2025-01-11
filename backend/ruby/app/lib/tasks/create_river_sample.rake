@@ -34,12 +34,12 @@ namespace :db do
     sensor = device.sensors.last
 
     # now will create sensor data according to the following table
-    # Hora	Nível do Rio (m)	Descrição
-    # 00h	4,0	Estável
-    # 06h	4,3	Leve aumento
-    # 12h	5,0	Pico de nível
-    # 18h	4,7	Redução gradual
-    # 24h	4,0	Retorno ao nível médio
+    # Time	River level (m)	Description
+    # 00h	4,0	Stable
+    # 06h	4,3	Slow increase
+    # 12h	5,0	Peak
+    # 18h	4,7	Slow decrease
+    # 24h	4,0	Back do stable
     days_back = 7
     (0..days_back).each do |day|
       recorded_time = day.days.ago.beginning_of_day
