@@ -4,6 +4,7 @@ import SensorDataChart from './SensorDataChart';
 import Devices from './Devices';
 import DeviceSensors from './DeviceSensors';
 import UserLogin from './UserLogin';
+import CLientAlarmFake from './ClientAlarmFake';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
             <Route path="/login" element={<UserLogin />} />
             <Route path="/devices" element={<Devices />} />
             <Route path="/device-sensors/:deviceId" element={<DeviceSensors />} />
+            <Route path="/clientalarmfake" element={<CLientAlarmFake />} />
           </Routes>
         </Router>
       </main>

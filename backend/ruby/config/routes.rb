@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'sensor_datum/index'
   get 'device/index'
   get 'alarm/index'
+  # get 'alarm', to: 'alarms#index'
   post 'alarm/create'
   post 'users/login', to: 'users#login'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

@@ -1,8 +1,8 @@
 class AlarmController < ApplicationController
   # ignores authentication for now
-  before_action :set_cors_headers, only: [:index]
+  before_action :set_cors_headers
   # skip Can't verify CSRF token authenticity for post requests
-  skip_before_action :verify_authenticity_token, only: [:create]
+  # skip_before_action :verify_authenticity_token, only: [:create]
 
   def index
     if params[:device_id].present?
