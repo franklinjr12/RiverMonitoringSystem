@@ -1,14 +1,3 @@
-// 1
-// create a screen that will display all devices as a grid of cards
-// they fetch the data from http://localhost:3000/device/index?user_id=1
-// which comes on the format: { devices: [{ id: 1, name: 'Device 1', location: 'river 1' }, { id: 2, name: 'Device 2', location: 'river 2' }] }
-
-// 2
-// actually it somes in this formart: [{ id: 1, name: 'Device 1', location: 'river 1' }, { id: 2, name: 'Device 2', location: 'river 2' }]
-
-// 3
-// make so that the cards are clicable and when clicked they will navigate to the DeviceSensors screen passing the device id as a parameter
-
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, Grid } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';

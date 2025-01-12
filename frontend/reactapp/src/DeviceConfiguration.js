@@ -39,7 +39,9 @@ const DeviceConfiguration = () => {
 
     const [deviceConfigOption, setDeviceConfigOption] = useState('');
     const handleDeviceConfigChange = (event) => {
+        console.log('Device config option:', event.target);
         setDeviceConfigOption(event.target.value);
+        setInputValue(deviceConfig[event.target.value]);
     }
 
     const handleInputChange = (event) => {
