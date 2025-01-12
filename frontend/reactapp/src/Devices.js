@@ -37,7 +37,7 @@ const Devices = () => {
   return (
     <div>
       <nav style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', backgroundColor: '#f5f5f5' }}>
-        <Typography variant="h6">Device Monitoring System</Typography>
+        <Typography variant="h6">River Monitoring System</Typography>
         <button style={{ padding: '10px', cursor: 'pointer' }} onClick={handleLogout}>Logout</button>
       </nav>
       {devices.length > 0 ? (
