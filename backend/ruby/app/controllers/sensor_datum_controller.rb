@@ -1,6 +1,7 @@
 class SensorDatumController < ApplicationController
   # ignores authentication for now
   before_action :set_cors_headers
+  before_action :permit_params, only: [:create]
 
   def index
     if params[:sensor_id].present?
@@ -43,9 +44,35 @@ class SensorDatumController < ApplicationController
     end
   end
 
+  def create
+    if params[:sensor_id].present? && params[:value].present?
+      sensor = Sensor.find(params[:sensor_id])
+      if sensor.nil?
+        render json: { error: "Sensor not found" }, status: :bad_request
+        return
+      end
+      # get sensor_id, value, recorded_at from params
+      data = {
+        sensor_id: params[:sensor_id],
+        value: params[:value],
+        recorded_at: params[:recorded_at] || Time.now
+      }
+      service = SensorDataIngestionService.new([data])
+      service.call
+      render json: :ok
+    else
+      render json: { error: "No sensor_id or value provided" }, status: :bad_request
+    end
+    
+  end
+
   private
 
   def set_cors_headers
     response.set_header('Access-Control-Allow-Origin', '*')
+  end
+
+  def permit_params
+    params.permit(:sensor_id, :value, :recorded_at)
   end
 end
