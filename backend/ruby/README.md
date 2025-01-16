@@ -24,4 +24,5 @@ For running console on container: docker exec -it ID bin/rails c
 
 * Deployment instructions
 
-* ...
+* Testing
+Run the following command specifying the test file: rails test test/controllers/sensor_datum_controller_test.rb

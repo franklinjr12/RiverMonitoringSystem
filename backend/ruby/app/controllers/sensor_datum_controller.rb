@@ -55,7 +55,8 @@ class SensorDatumController < ApplicationController
       data = {
         sensor_id: params[:sensor_id],
         value: params[:value],
-        recorded_at: params[:recorded_at] || Time.now
+        recorded_at: params[:recorded_at] || Time.now,
+        type: sensor.sensor_type
       }
       service = SensorDataIngestionService.new([data])
       service.call
