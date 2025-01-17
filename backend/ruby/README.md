@@ -26,3 +26,4 @@ For running console on container: docker exec -it ID bin/rails c
 
 * Testing
 Run the following command specifying the test file: rails test test/controllers/sensor_datum_controller_test.rb
+For running the test app for alarms: go run ./thirdpartyapp/alarm_receiver.go
