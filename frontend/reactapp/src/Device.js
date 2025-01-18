@@ -3,9 +3,9 @@ import { useParams } from 'react-router-dom';
 import SensorDataChart from './SensorDataChart';
 import HomeButton from './HomeButton';
 import DeviceConfiguration from './DeviceConfiguration';
-import './DeviceSensors.css';
+import './Device.css';
 
-const DeviceSensors = () => {
+const Device = () => {
   const { deviceId } = useParams();
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -56,4 +56,4 @@ const DeviceSensors = () => {
   );
 };
 
-export default DeviceSensors;
+export default Device;

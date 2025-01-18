@@ -7,9 +7,9 @@ class SensorDatumController < ApplicationController
     if params[:sensor_id].present?
       data = nil
       if params[:start_date].present? && params[:end_date].present?
-        data = SensorDatum.where(sensor: params[:sensor_id]).where(recorded_at: params[:start_date]..params[:end_date])
+        data = SensorDatum.where(sensor: params[:sensor_id]).where(recorded_at: params[:start_date]..params[:end_date]).order(:recorded_at)
       else
-        data = SensorDatum.where(sensor: params[:sensor_id])
+        data = SensorDatum.where(sensor: params[:sensor_id]).order(:recorded_at)
       end
       if data.empty?
         render json: { error: "No data found for the specified sensor" }, status: :bad_request
@@ -29,11 +29,11 @@ class SensorDatumController < ApplicationController
       end
       sensors.each do |sensor|
         if params[:start_date].present? && params[:end_date].present?
-          data[sensor.sensor_type] = SensorDatum.where(sensor: sensor.id).where(recorded_at: params[:start_date]..params[:end_date]).pluck(:value, :recorded_at).map do |value, recorded_at|
+          data[sensor.sensor_type] = SensorDatum.where(sensor: sensor.id).where(recorded_at: params[:start_date]..params[:end_date]).order(:recorded_at).pluck(:value, :recorded_at).map do |value, recorded_at|
             { value: value, recorded_at: recorded_at }
           end
         else
-          data[sensor.sensor_type] = SensorDatum.where(sensor: sensor.id).pluck(:value, :recorded_at).map do |value, recorded_at|
+          data[sensor.sensor_type] = SensorDatum.where(sensor: sensor.id).order(:recorded_at).pluck(:value, :recorded_at).map do |value, recorded_at|
             { value: value, recorded_at: recorded_at }
           end
         end
