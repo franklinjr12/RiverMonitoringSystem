@@ -1,12 +1,11 @@
-# lib/tasks/create_fixtures.rake
-# run with rails db:create_fixtures
+# run with rails db:create_level_fixtures
 namespace :db do
   desc "Create river level fixture data"
-  task create_fixtures: :environment do
+  task create_level_fixtures: :environment do
     # either specify a user or create a new one
      user = nil
 
-     if user.nil?
+     if user.nil? && (user = User.find_by(email: 'testuser@email.com')).nil?
       # Example fixture data for User model
       user = User.create!(
         email: 'testuser@email.com',
@@ -29,9 +28,7 @@ namespace :db do
         sensor_type: 'level'
       )
     end
-
-    # get the sensor
-    sensor = device.sensors.last
+    sensor = device.sensors.find_by(sensor_type: 'level')
 
     # now will create sensor data according to the following table
     # Time	River level (m)	Description
