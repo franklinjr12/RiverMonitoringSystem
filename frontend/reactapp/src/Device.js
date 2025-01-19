@@ -7,12 +7,15 @@ import './Device.css';
 
 const Device = () => {
   const { deviceId } = useParams();
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-
-  const handleDeviceConfig = () => {
-    console.log('Device configuration');
-  };
+  const [startDate, setStartDate] = useState(() => {
+    const date = new Date();
+    date.setDate(date.getDate() - 7);
+    return date.toISOString().split('T')[0];
+  });
+  const [endDate, setEndDate] = useState(() => {
+    const date = new Date();
+    return date.toISOString().split('T')[0];
+  });
 
   return (
     <div>
@@ -29,7 +32,7 @@ const Device = () => {
           <input 
             type="date" 
             value={startDate || ''} 
-            onChange={(e) => setStartDate(e.target.value)} 
+            onChange={(e) => setStartDate(e.target.value)}
           />
           <input 
             type="date" 
