@@ -13,6 +13,10 @@ const SensorDataChart = ({ dataSource, deviceId, startDate = null, endDate = nul
     fetch(url)
       .then(response => response.json())
       .then(data => {
+        if (!data[dataSource]) {
+          console.error('Invalid data source:', dataSource);
+          return;
+        }
         const sensorData = data[dataSource].map(item => ({
           date: item.recorded_at,
           [dataSource]: item.value

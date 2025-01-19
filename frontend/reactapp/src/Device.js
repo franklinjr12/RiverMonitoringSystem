@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import SensorDataChart from './SensorDataChart';
 import HomeButton from './HomeButton';
 import DeviceConfiguration from './DeviceConfiguration';
+import DeviceAlarms from './DeviceAlarms';
 import './Device.css';
 
 const Device = () => {
@@ -20,13 +21,20 @@ const Device = () => {
   return (
     <div>
       <div className="header">
-        <div className="home-button">
-          <HomeButton />
-        </div>
-        <div className="settings-button" style={{ border: '1px solid black', padding: '5px', borderRadius: '5px' }}>
-          <DeviceConfiguration
-          deviceId={deviceId}
-          />
+        <div className="action-buttons" style={{ display: 'flex', justifyContent: 'space-between', gap: '10px' }}>
+          <div className="home-button">
+            <HomeButton />
+          </div>
+          <div className="settings-button" style={{ border: '1px solid black', padding: '5px', borderRadius: '5px' }}>
+            <DeviceConfiguration
+            deviceId={deviceId}
+            />
+          </div>
+          <div className="alarms-button" style={{ border: '1px solid black', padding: '5px', borderRadius: '5px' }}>
+            <DeviceAlarms
+              deviceId={deviceId}
+            />
+          </div>
         </div>
         <div className="date-pickers">
           <input 

@@ -1,6 +1,7 @@
 class AlarmController < ApplicationController
-  # ignores authentication for now
+  skip_before_action :verify_authenticity_token
   before_action :set_cors_headers
+  before_action :allow_params, only: [:create]
 
   def index
     if params[:device_id].present?
@@ -36,5 +37,9 @@ class AlarmController < ApplicationController
 
   def set_cors_headers
     response.set_header('Access-Control-Allow-Origin', '*')
+  end
+
+  def allow_params
+    params.permit(:device_id, :trigger_condition, :notification_endpoint)
   end
 end
