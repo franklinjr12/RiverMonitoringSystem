@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { Box } from '@mui/material';
 import SensorDataChart from './SensorDataChart';
 import HomeButton from './HomeButton';
 import DeviceConfiguration from './DeviceConfiguration';
 import DeviceAlarms from './DeviceAlarms';
+import DownloadGraphDataButton from './DownloadGraphDataButton';
 import './Device.css';
 
 const Device = () => {
@@ -49,20 +51,40 @@ const Device = () => {
           />
         </div>
       </div>
-      <h1>River level</h1>
-      <SensorDataChart 
-        dataSource="level" 
-        deviceId={deviceId} 
-        startDate={startDate} 
-        endDate={endDate} 
-      />
-      <h1>Local temperature</h1>
-      <SensorDataChart 
-        dataSource="temperature" 
-        deviceId={deviceId} 
-        startDate={startDate} 
-        endDate={endDate} 
-      />
+      <Box>
+        <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h1 style={{ textAlign: 'center', flex: 1 }}>River level</h1>
+          <DownloadGraphDataButton 
+            dataSource="level" 
+            deviceId={deviceId} 
+            startDate={startDate} 
+            endDate={endDate}
+          />
+        </Box>
+        <SensorDataChart 
+          dataSource="level" 
+          deviceId={deviceId} 
+          startDate={startDate} 
+          endDate={endDate} 
+        />
+      </Box>
+      <Box>
+        <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h1 style={{ textAlign: 'center', flex: 1 }}>Local temperature</h1>
+          <DownloadGraphDataButton 
+            dataSource="temperature" 
+            deviceId={deviceId} 
+            startDate={startDate} 
+            endDate={endDate}
+          />
+        </Box>
+        <SensorDataChart 
+          dataSource="temperature" 
+          deviceId={deviceId} 
+          startDate={startDate} 
+          endDate={endDate} 
+        />
+      </Box>
     </div>
   );
 };
