@@ -9,10 +9,10 @@ Users can have many devices collecting and for each device they can see river le
 ## Screenshots
 
 ### Device selection menu
-<img align="center" src="images/devices_screen.png"> -->
+<img align="center" src="images/user_devices_screen.png"> -->
 
 ### Device sensors screen
-<img align="center" src="images/sensor_data_screen.png"> -->
+<img align="center" src="images/device_data_screen.png"> -->
 
 <!-- ## System diagram
 <img align="center" src="diagrams/general.png"> -->
