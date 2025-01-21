@@ -6,8 +6,6 @@ const UserLogin = () => {
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Submitting:', username, password);
-        // will send a request to UserController#login
         fetch('http://localhost:3000/users/login', {
           method: 'POST',
           headers: {
@@ -22,8 +20,6 @@ const UserLogin = () => {
         })
           .then((response) => response.json())
           .then((data) => {
-            console.log('Success:', data);
-            // Handle successful login, e.g., redirect to another page or update UI
             if (data["error"]) {
               alert(data["error"]);
               return;
