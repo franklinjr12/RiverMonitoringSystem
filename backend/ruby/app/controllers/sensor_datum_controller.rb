@@ -45,20 +45,14 @@ class SensorDatumController < ApplicationController
   end
 
   def create
-    if params[:sensor_id].present? && params[:value].present?
-      sensor = Sensor.find(params[:sensor_id])
+    if params[:payload][0][:sensor_id].present? && params[:payload][0][:value].present?
+      sensor = Sensor.find(params[:payload][0][:sensor_id].to_i)
       if sensor.nil?
         render json: { error: "Sensor not found" }, status: :bad_request
         return
       end
-      # get sensor_id, value, recorded_at from params
-      data = {
-        sensor_id: params[:sensor_id],
-        value: params[:value],
-        recorded_at: params[:recorded_at] || Time.now,
-        type: sensor.sensor_type
-      }
-      service = SensorDataIngestionService.new([data])
+      data = params[:payload]
+      service = SensorDataIngestionService.new(data)
       service.call
       render json: :ok
     else
@@ -74,6 +68,6 @@ class SensorDatumController < ApplicationController
   end
 
   def permit_params
-    params.permit(:sensor_id, :value, :recorded_at)
+    params.permit!
   end
 end
