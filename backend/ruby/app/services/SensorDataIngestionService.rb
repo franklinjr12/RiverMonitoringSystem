@@ -9,13 +9,16 @@ class SensorDataIngestionService
   end
 
   def call
+    sensor_data_entries = []
     @sensor_data.each do |data|
-      SensorDatum.create(sensor_id: data[:sensor_id], value: data[:value], recorded_at: data[:recorded_at] || Time.now)
+      time = data[:recorded_at] || Time.now
+      sensor_data_entries << { sensor_id: data[:sensor_id], value: data[:value], recorded_at: Time.parse(time) }
       @alarms.each do |alarm|
         if alarm.condition_type == @sensor_type_hash[data[:sensor_id].to_i] && alarm.trigger(data[:value].to_i)
           NotificationService.send_notification(alarm)
         end
       end
     end
+    SensorDatum.insert_all(sensor_data_entries)
   end
 end

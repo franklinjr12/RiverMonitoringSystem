@@ -2,6 +2,7 @@ class SensorDatumController < ApplicationController
   # ignores authentication for now
   before_action :set_cors_headers
   before_action :permit_params, only: [:create]
+  skip_before_action :verify_authenticity_token
 
   def index
     if params[:sensor_id].present?
