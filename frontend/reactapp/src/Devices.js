@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, Grid } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, Typography, Grid, Button } from '@mui/material';
+import { getContext } from './ApplicationContext';
 
 const Devices = () => {
   const [devices, setDevices] = useState([]);
@@ -8,7 +9,8 @@ const Devices = () => {
 
   useEffect(() => {
     const userId = localStorage.getItem('userId');
-    fetch('http://localhost:3000/device/index?user_id=' + userId)
+    const host = getContext().BACKEND_HOST
+    fetch(`${host}/device/index?user_id=${userId}`)
       .then(response => response.json())
       .then(data => setDevices(data))
       .catch(error => console.error('Error fetching devices:', error));

@@ -1,6 +1,4 @@
-import logo from './logo.svg';
 import './App.css';
-import SensorDataChart from './SensorDataChart';
 import Devices from './Devices';
 import Device from './Device';
 import UserLogin from './UserLogin';

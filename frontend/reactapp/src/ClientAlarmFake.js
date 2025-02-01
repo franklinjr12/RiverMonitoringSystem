@@ -1,11 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
+import { getContext } from './ApplicationContext';
 
 const CLientAlarmFake = () => {
     const [alarms, setAlarms] = useState([]);
 
     useEffect(() => {
-        fetch('http://localhost:3000/alarm/index?device_id=1')
+        fetch(getContext().BACKEND_HOST + '/alarm/index?device_id=1')
             .then(response => response.json())
             .then(data => setAlarms(data))
             .catch(error => console.error('Error fetching alarms:', error));

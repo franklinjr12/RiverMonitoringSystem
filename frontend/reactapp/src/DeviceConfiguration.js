@@ -3,6 +3,7 @@ import Modal from '@mui/material/Modal';
 import { Box, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button } from '@mui/material';
 import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt';
 import { useParams } from 'react-router-dom';
+import { getContext } from './ApplicationContext';
 
 const style = {
     position: 'absolute',
@@ -22,7 +23,7 @@ const DeviceConfiguration = () => {
 
     const [deviceConfig, setDeviceConfig] = useState({});
     useEffect(() => {
-        fetch(`http://localhost:3000/device_configuration/index?device_id=${deviceId}`)
+        fetch(getContext().BACKEND_HOST + `/device_configuration/index?device_id=${deviceId}`)
             .then(response => response.json())
             .then(data => setDeviceConfig(data))
             .catch(error => console.error('Error fetching device configuration:', error));
@@ -52,7 +53,7 @@ const DeviceConfiguration = () => {
         console.log('Configuration option:', deviceConfigOption);
         console.log('Input value:', inputValue);
         console.log('current deviceConfig:', deviceConfig);
-        fetch(`http://localhost:3000/device_configuration/create?device_id=${deviceId}`, {
+        fetch(getContext().BACKEND_HOST + `/device_configuration/create?device_id=${deviceId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

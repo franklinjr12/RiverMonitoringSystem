@@ -3,6 +3,7 @@ import Modal from '@mui/material/Modal';
 import { Box, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button } from '@mui/material';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import { useParams } from 'react-router-dom';
+import { getContext } from './ApplicationContext';
 
 const style = {
     position: 'absolute',
@@ -46,7 +47,7 @@ const DeviceAlarms = () => {
 
     const [deviceAlarms, setDeviceAlarms] = useState('');
     useEffect(() => {
-        fetch(`http://localhost:3000/alarm/index?device_id=${deviceId}`)
+        fetch(getContext().BACKEND_HOST + `/alarm/index?device_id=${deviceId}`)
             .then(response => response.json())
             .then(data => setDeviceAlarms(data.map(alarm => JSON.stringify(alarm)).join('\n\n').replace(/":/g, '": ').replace(/",/g, '", ').replace(/[{}]/g, '')))
             .catch(error => console.error('Error fetching device alarms:', error));
@@ -58,7 +59,7 @@ const DeviceAlarms = () => {
             alert('Please enter all fields.');
             return;
         }
-        fetch(`http://localhost:3000/alarm/create?device_id=${deviceId}`, {
+        fetch(getContext().BACKEND_HOST + `/alarm/create?device_id=${deviceId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
