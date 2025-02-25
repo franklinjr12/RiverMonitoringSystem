@@ -7,8 +7,9 @@ const DemoUserLogin = () => {
         fetch(getContext().BACKEND_HOST + '/demo/index', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-            },
+              'Content-Type': 'application/json',
+              'Authorization': localStorage.getItem('sessionToken')
+            }
         })
             .then((response) => response.json())
             .then((data) => {

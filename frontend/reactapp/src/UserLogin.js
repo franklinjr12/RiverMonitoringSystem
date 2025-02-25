@@ -27,7 +27,7 @@ const UserLogin = () => {
           return;
         }
         alert("Login successful");
-        localStorage.setItem('userId', data["id"]);
+        localStorage.setItem('sessionToken', data["token"]);
         window.location.href = '/devices';
       })
       .catch((error) => {

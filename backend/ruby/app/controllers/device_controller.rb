@@ -3,7 +3,7 @@ class DeviceController < ApplicationController
   before_action :set_cors_headers
 
   def index
-    devices = Device.where(user: params[:user_id])
+    devices = Device.where(user: current_user.id)
     if devices.empty?
       render json: { error: "No devices found for the specified user" }, status: :bad_request
       return

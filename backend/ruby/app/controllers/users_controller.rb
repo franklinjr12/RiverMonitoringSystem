@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
     # ignores authentication for now
+    skip_before_action :authenticate_user
     skip_before_action :verify_authenticity_token
 
   def create
@@ -14,7 +15,8 @@ class UsersController < ApplicationController
   def login
     user = User.find_by(email: user_params[:username])
     if user && user.authenticate(user_params[:password])
-      render json: {id: user.id}, status: :ok
+      session = create_user_session(user.id)
+      render json: {token: session.session_token}, status: :ok
     else
       render json: { error: "Invalid email or password" }, status: :unauthorized
     end
@@ -26,4 +28,9 @@ class UsersController < ApplicationController
     params.require(:user).permit(:username, :password)
   end
   
+  def create_user_session(user_id)
+    UserSession.where(user_id: user_id).destroy_all
+    user_session = UserSession.create(user_id: user_id, session_token: SecureRandom.hex(8))
+    user_session
+  end
 end

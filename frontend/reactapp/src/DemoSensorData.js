@@ -7,9 +7,10 @@ const DemoSensorData = () => {
         fetch(getContext().BACKEND_HOST + '/demo/create_sensor_data', {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-            },
-        })
+              'Content-Type': 'application/json',
+              'Authorization': localStorage.getItem('sessionToken')
+            }
+          })
             .then((response) => response.json())
             .then((data) => {
                 if (data["error"]) {

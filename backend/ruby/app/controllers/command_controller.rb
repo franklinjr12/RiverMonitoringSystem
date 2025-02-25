@@ -1,5 +1,6 @@
 class CommandController < ApplicationController
     
+  skip_before_action :authenticate_user
   before_action :set_cors_headers
 
   def index

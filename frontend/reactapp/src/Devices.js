@@ -8,9 +8,14 @@ const Devices = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
     const host = getContext().BACKEND_HOST
-    fetch(`${host}/device/index?user_id=${userId}`)
+    fetch(`${host}/device/index`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('sessionToken')
+      }
+    })
       .then(response => response.json())
       .then(data => setDevices(data))
       .catch(error => console.error('Error fetching devices:', error));

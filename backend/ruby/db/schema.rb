@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_01_12_144512) do
+ActiveRecord::Schema[7.1].define(version: 2025_02_25_120521) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -59,6 +59,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_12_144512) do
     t.index ["device_id"], name: "index_sensors_on_device_id"
   end
 
+  create_table "user_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "session_token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_sessions_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", null: false
     t.string "password_digest", null: false
@@ -72,4 +80,5 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_12_144512) do
   add_foreign_key "devices", "users"
   add_foreign_key "sensor_data", "sensors"
   add_foreign_key "sensors", "devices"
+  add_foreign_key "user_sessions", "users"
 end

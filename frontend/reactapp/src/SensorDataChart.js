@@ -11,7 +11,13 @@ const SensorDataChart = ({ dataSource, deviceId, startDate = null, endDate = nul
       url += `&start_date=${startDate}&end_date=${endDate}`;
     }
 
-    fetch(url)
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': localStorage.getItem('sessionToken')
+      }
+    })
       .then(response => response.json())
       .then(data => {
         if (!data[dataSource]) {

@@ -47,7 +47,13 @@ const DeviceAlarms = () => {
 
     const [deviceAlarms, setDeviceAlarms] = useState('');
     useEffect(() => {
-        fetch(getContext().BACKEND_HOST + `/alarm/index?device_id=${deviceId}`)
+        fetch(getContext().BACKEND_HOST + `/alarm/index?device_id=${deviceId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': localStorage.getItem('sessionToken')
+            }
+        })
             .then(response => response.json())
             .then(data => setDeviceAlarms(data.map(alarm => JSON.stringify(alarm)).join('\n\n').replace(/":/g, '": ').replace(/",/g, '", ').replace(/[{}]/g, '')))
             .catch(error => console.error('Error fetching device alarms:', error));
@@ -63,6 +69,7 @@ const DeviceAlarms = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('sessionToken')
             },
             body: JSON.stringify({
                 trigger_condition: buildTriggerCondition(),

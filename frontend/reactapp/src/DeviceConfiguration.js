@@ -23,7 +23,13 @@ const DeviceConfiguration = () => {
 
     const [deviceConfig, setDeviceConfig] = useState({});
     useEffect(() => {
-        fetch(getContext().BACKEND_HOST + `/device_configuration/index?device_id=${deviceId}`)
+        fetch(getContext().BACKEND_HOST + `/device_configuration/index?device_id=${deviceId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': localStorage.getItem('sessionToken')
+            }
+        })
             .then(response => response.json())
             .then(data => setDeviceConfig(data))
             .catch(error => console.error('Error fetching device configuration:', error));
@@ -57,6 +63,7 @@ const DeviceConfiguration = () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('sessionToken')
             },
             body: JSON.stringify({
                 device_configuration: {

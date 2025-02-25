@@ -6,7 +6,13 @@ const CLientAlarmFake = () => {
     const [alarms, setAlarms] = useState([]);
 
     useEffect(() => {
-        fetch(getContext().BACKEND_HOST + '/alarm/index?device_id=1')
+        fetch(getContext().BACKEND_HOST + '/alarm/index?device_id=1', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': localStorage.getItem('sessionToken')
+            }
+        })
             .then(response => response.json())
             .then(data => setAlarms(data))
             .catch(error => console.error('Error fetching alarms:', error));
