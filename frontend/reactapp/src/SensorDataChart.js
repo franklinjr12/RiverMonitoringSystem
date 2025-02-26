@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { getContext } from './ApplicationContext';
+import moment from 'moment'
 
 const SensorDataChart = ({ dataSource, deviceId, startDate = null, endDate = null }) => {
   const [data, setData] = useState([]);
@@ -25,9 +26,9 @@ const SensorDataChart = ({ dataSource, deviceId, startDate = null, endDate = nul
           return;
         }
         const sensorData = data[dataSource].map(item => ({
-          date: item.recorded_at,
-          [dataSource]: item.value
-        }));
+            date: new Date(item.recorded_at).getTime(),
+            [dataSource]: item.value
+          }));
         setData(sensorData);
       })
       .catch(error => console.error('Error fetching data:', error));
@@ -37,9 +38,9 @@ const SensorDataChart = ({ dataSource, deviceId, startDate = null, endDate = nul
     <ResponsiveContainer width="100%" height={400}>
       <LineChart data={data}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
+        <XAxis dataKey="date" tickFormatter={(ts) => moment(ts).format("YYYY-MM-DD HH:mm:ss")} type="number" domain={['dataMin', 'dataMax']}/>
         <YAxis />
-        <Tooltip />
+        <Tooltip labelFormatter={(label) => moment(label).format("YYYY-MM-DD HH:mm:ss")} />
         <Legend />
         <Line type="monotone" dataKey={dataSource} stroke="#8884d8" activeDot={{ r: 8 }} />
       </LineChart>
