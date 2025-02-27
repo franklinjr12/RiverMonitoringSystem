@@ -5,7 +5,7 @@ class AlarmController < ApplicationController
 
   def index
     if params[:device_id].present?
-      device = Device.find(params[:device_id])
+      device = Device.find_by(id: params[:device_id], user: current_user)
       data = Alarm.where(device: device)
       if data.empty?
         render json: { error: "No alarm found for the specified device" }, status: :bad_request
@@ -22,6 +22,10 @@ class AlarmController < ApplicationController
 
   def create
     if params[:device_id].present? && params[:trigger_condition].present? && params[:notification_endpoint].present?
+      if Device.find_by(id: params[:device_id], user: current_user).nil?
+        render json: { error: "Device not found" }, status: :bad_request
+        return
+      end
       alarm = Alarm.new(device_id: params[:device_id], trigger_condition: params[:trigger_condition], notification_endpoint: params[:notification_endpoint])
       if alarm.save
         render json: { success: "Alarm created successfully" }

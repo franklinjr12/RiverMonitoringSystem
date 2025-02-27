@@ -5,7 +5,7 @@ class CommandController < ApplicationController
 
   def index
     if params[:device_id].present?
-        commands = Command.where(device_id: params[:device_id])
+        commands = Command.where(device_id: params[:device_id]).joins(:device).where(device: { user: current_user })
         payload = commands.map do |command|
             {
                 command_type: command.command_type,

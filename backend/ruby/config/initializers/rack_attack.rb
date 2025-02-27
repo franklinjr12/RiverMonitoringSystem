@@ -41,7 +41,6 @@ class Rack::Attack
   #
   # Key: "rack::attack:#{Time.now.to_i/:period}:logins/ip:#{req.ip}"
   throttle('logins/ip', limit: 5, period: 20.seconds) do |req|
-    puts("=== path #{req.path} method #{req.request_method} ")
     if req.path == '/users/login' && req.post?
       req.ip
     end

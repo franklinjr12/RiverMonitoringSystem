@@ -6,6 +6,12 @@ class SensorDatumController < ApplicationController
 
   def index
     if params[:sensor_id].present?
+      # ensure the selected sensor belongs to current_user
+      sensor = Sensor.where(id: params[:sensor_id]).joins(:device).where(device: { user: current_user }).first
+      if sensor.nil?
+        render json: { error: "Sensor not found" }, status: :bad_request
+        return
+      end
       data = nil
       if params[:start_date].present? && params[:end_date].present?
         data = SensorDatum.where(sensor: params[:sensor_id]).where(recorded_at: params[:start_date]..params[:end_date]).order(:recorded_at)
@@ -23,7 +29,8 @@ class SensorDatumController < ApplicationController
     elsif params[:device_id].present?
       # will take data by sensor_type
       data = {}
-      sensors = Sensor.where(device: params[:device_id])
+      # ensure the selected sensor belongs to current_user
+      sensors = Sensor.where(device: params[:device_id]).joins(:device).where(device: { user: current_user })
       if sensors.empty?
         render json: { error: "No sensors found for the specified device" }, status: :bad_request
         return

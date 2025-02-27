@@ -5,8 +5,8 @@ class DeviceConfigurationController < ApplicationController
 
   def index
     if params[:device_id].present?
-      device = Device.find(params[:device_id])
-      device_configuration = device.configuration
+      device = Device.find_by(id: params[:device_id], user: current_user)
+      device_configuration = device&.configuration
       render json: device_configuration || {}
     else
       render json: { error: "No device_id provided" }, status: :bad_request
@@ -15,7 +15,7 @@ class DeviceConfigurationController < ApplicationController
 
   def create
     if params[:device_id].present?
-      if device = Device.find(params[:device_id])
+      if device = Device.find_by(id: params[:device_id], user: current_user)
         device.configuration = {} if device.configuration.nil?
         device.configuration.merge!({params[:device_configuration][:option] => params[:device_configuration][:value]})
         if device.save
