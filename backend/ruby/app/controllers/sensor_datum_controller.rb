@@ -14,6 +14,10 @@ class SensorDatumController < ApplicationController
       end
       data = nil
       if params[:start_date].present? && params[:end_date].present?
+        if (DateTime.parse(params[:end_date]) - DateTime.parse(params[:start_date])).to_i > 366
+          render json: { error: "Date range should not exceed 1 year" }, status: :bad_request
+          return
+        end
         data = SensorDatum.where(sensor: params[:sensor_id]).where(recorded_at: params[:start_date]..params[:end_date]).order(:recorded_at)
       else
         data = SensorDatum.where(sensor: params[:sensor_id]).order(:recorded_at)
