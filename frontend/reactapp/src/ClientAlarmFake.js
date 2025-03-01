@@ -1,12 +1,12 @@
 
 import React, { useEffect, useState } from 'react';
-import { getContext } from './ApplicationContext';
 
 const CLientAlarmFake = () => {
     const [alarms, setAlarms] = useState([]);
 
     useEffect(() => {
-        fetch(getContext().BACKEND_HOST + '/alarm/index?device_id=1', {
+        const host = process.env.REACT_APP_BACKEND_HOST;
+        fetch(host + '/alarm/index?device_id=1', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

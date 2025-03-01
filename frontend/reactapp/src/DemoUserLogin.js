@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { getContext } from './ApplicationContext';
+
 
 const DemoUserLogin = () => {
 
     useEffect(() => {
-        fetch(getContext().BACKEND_HOST + '/demo/index', {
+        const host = process.env.REACT_APP_BACKEND_HOST;
+        fetch(host + '/demo/index', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

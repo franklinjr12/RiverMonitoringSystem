@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import DownloadIcon from '@mui/icons-material/Download';
-import { getContext } from './ApplicationContext';
 
 const DownloadGraphDataButton = ({ dataSource, deviceId, startDate = null, endDate = null }) => {
       const [data, setData] = useState([]);
     
       useEffect(() => {
-        let url = getContext().BACKEND_HOST + `/sensor_datum/index?device_id=${deviceId}`;
+        const host = process.env.REACT_APP_BACKEND_HOST;
+        let url = host + `/sensor_datum/index?device_id=${deviceId}`;
         if (startDate && endDate) {
           url += `&start_date=${startDate}&end_date=${endDate}`;
         }

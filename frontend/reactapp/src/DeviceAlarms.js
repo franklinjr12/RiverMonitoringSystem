@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import { Box, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button } from '@mui/material';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import { useParams } from 'react-router-dom';
-import { getContext } from './ApplicationContext';
+
 
 const style = {
     position: 'absolute',
@@ -47,7 +47,8 @@ const DeviceAlarms = () => {
 
     const [deviceAlarms, setDeviceAlarms] = useState('');
     useEffect(() => {
-        fetch(getContext().BACKEND_HOST + `/alarm/index?device_id=${deviceId}`, {
+        const host = process.env.REACT_APP_BACKEND_HOST;
+        fetch(host + `/alarm/index?device_id=${deviceId}`, {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
@@ -65,7 +66,8 @@ const DeviceAlarms = () => {
             alert('Please enter all fields.');
             return;
         }
-        fetch(getContext().BACKEND_HOST + `/alarm/create?device_id=${deviceId}`, {
+        const host = process.env.REACT_APP_BACKEND_HOST;
+        fetch(host + `/alarm/create?device_id=${deviceId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getContext } from './ApplicationContext';
 
 const DemoSensorData = () => {
 
     useEffect(() => {
-        fetch(getContext().BACKEND_HOST + '/demo/create_sensor_data', {
+        const host = process.env.REACT_APP_BACKEND_HOST;
+        fetch(host + '/demo/create_sensor_data', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

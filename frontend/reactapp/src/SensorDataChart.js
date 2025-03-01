@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { getContext } from './ApplicationContext';
 import moment from 'moment'
 
 const SensorDataChart = ({ dataSource, deviceId, startDate = null, endDate = null }) => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    let url = getContext().BACKEND_HOST + `/sensor_datum/index?device_id=${deviceId}`;
+    const host = process.env.REACT_APP_BACKEND_HOST;
+    let url = host + `/sensor_datum/index?device_id=${deviceId}`;
     if (startDate && endDate) {
       url += `&start_date=${startDate}&end_date=${endDate}`;
     }

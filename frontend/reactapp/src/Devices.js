@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Grid, Button } from '@mui/material';
-import { getContext } from './ApplicationContext';
 
 const Devices = () => {
   const [devices, setDevices] = useState([]);

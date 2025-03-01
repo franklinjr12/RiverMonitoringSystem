@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
-import { getContext } from './ApplicationContext';
 
 const UserLogin = () => {
   const [username, setUsername] = useState('');
@@ -8,7 +7,8 @@ const UserLogin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch(getContext().BACKEND_HOST + '/users/login', {
+    const host = process.env.REACT_APP_BACKEND_HOST;
+    fetch(host + '/users/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
