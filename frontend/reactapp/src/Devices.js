@@ -7,7 +7,7 @@ const Devices = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const host = getContext().BACKEND_HOST
+    const host = process.env.REACT_APP_BACKEND_HOST;
     fetch(`${host}/device/index`, {
       method: 'GET',
       headers: {
