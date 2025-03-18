@@ -27,7 +27,7 @@ class SensorDatumController < ApplicationController
         return
       end
       data = data.pluck(:value, :recorded_at).map do |value, recorded_at|
-        { value: value, recorded_at: recorded_at }
+        { value: value.round(2), recorded_at: recorded_at }
       end
       render json: data
     elsif params[:device_id].present?
@@ -42,11 +42,11 @@ class SensorDatumController < ApplicationController
       sensors.each do |sensor|
         if params[:start_date].present? && params[:end_date].present?
           data[sensor.sensor_type] = SensorDatum.where(sensor: sensor.id).where(recorded_at: params[:start_date]..params[:end_date]).order(:recorded_at).pluck(:value, :recorded_at).map do |value, recorded_at|
-            { value: value, recorded_at: recorded_at }
+            { value: value.round(2), recorded_at: recorded_at }
           end
         else
           data[sensor.sensor_type] = SensorDatum.where(sensor: sensor.id).order(:recorded_at).pluck(:value, :recorded_at).map do |value, recorded_at|
-            { value: value, recorded_at: recorded_at }
+            { value: value.round(2), recorded_at: recorded_at }
           end
         end
       end

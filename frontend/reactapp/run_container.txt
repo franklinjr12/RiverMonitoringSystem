@@ -1,0 +1,5 @@
+Development:
+docker -f Dockerfile.dev -t reactapp . ; docker run -p 3001:3001 reactapp
+
+Production:
+docker build -t reactapp --target build . ; docker run -p 80:80 reactapp

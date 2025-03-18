@@ -29,8 +29,8 @@ class UsersController < ApplicationController
   end
   
   def create_user_session(user_id)
-    UserSession.where(user_id: user_id).destroy_all
-    user_session = UserSession.create(user_id: user_id, session_token: SecureRandom.hex(8))
+    user_session = UserSession.find_by(user_id: user_id)
+    user_session = UserSession.create(user_id: user_id, session_token: SecureRandom.hex(8)) if user_session.nil?
     user_session
   end
 end
