@@ -13,6 +13,7 @@ class NotificationService
       alarm_id: alarm.id,
       sent_at: Time.current.utc
     }
+    # sending HTTP notification
     begin
       uri = URI(alarm.notification_endpoint)
       req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
@@ -24,5 +25,7 @@ class NotificationService
     rescue StandardError => e
       Rails.logger.error("Error sending notification: #{e.message}")
     end
+    # sending email notification
+    NotificationMailer.alarm_email(payload).deliver_later
   end
 end

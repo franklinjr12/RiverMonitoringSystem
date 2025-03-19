@@ -1,0 +1,5 @@
+<h1>Alarm id <%= @payload[:alarm_id] %> triggered from device <%= @payload[:device] %></h1>
+<p>User <%= @payload[:user] %> is being notified that the alarm from
+<%= @payload[:device] %> at <%= @payload[:location] %>
+was sent at <%= @payload[:sent_at] %>.</p>
+<p>To login check LOGIN_URL</p>
