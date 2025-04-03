@@ -2,7 +2,7 @@ require 'rake'
 
 class DemoController < ApplicationController
 
-  skip_before_action :verify_authenticity_token
+  skip_before_action :verify_authenticity_token, :authenticate_user
 
   def index
     render json: { id: user.id }, status: :ok
@@ -31,6 +31,7 @@ class DemoController < ApplicationController
         password_confirmation: 'password'
       )
     end
+    test_user.devices.create!(name: 'Test Device') if test_user.devices.where(name: 'Test Device').empty?
     test_user 
   end
 end
