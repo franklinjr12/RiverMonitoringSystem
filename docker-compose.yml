@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      POSTGRES_USER: backenduser
+      POSTGRES_PASSWORD: backendpassword
+      POSTGRES_DB: rivermonitoring_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend/ruby
+      dockerfile: Dockerfile
+    container_name: rails_app
+    environment:
+      RAILS_ENV: development
+      DB_HOST: postgres
+      DB_USER: backenduser
+      DB_PASS: backendpassword
+      DB_PORT: 5432
+      DB_PREFIX: rivermonitoring
+      GMAIL_USERNAME: email
+      GMAIL_PASSWORD: keypassword
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend/ruby:/rails
+
+  frontend:
+    build:
+      context: ./frontend/reactapp
+      dockerfile: Dockerfile
+    container_name: react_app
+    environment:
+      REACT_APP_BACKEND_HOST: http://localhost:3000
+    ports:
+      - "3001:80"
+    volumes:
+      - ./frontend/reactapp:/app
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres_data:

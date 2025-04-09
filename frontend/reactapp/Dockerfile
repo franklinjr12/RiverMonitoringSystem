@@ -3,6 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 COPY . .
+ENV REACT_APP_BACKEND_HOST=http://localhost:3000
 RUN npm run build
  
 # Production Stage
