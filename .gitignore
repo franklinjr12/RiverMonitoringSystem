@@ -36,3 +36,5 @@ backend/ruby/config/master.key
 backend/ruby/secrets.txt
 
 frontend/node_modules
+
+firmware/river_monitor/config.hpp
