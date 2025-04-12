@@ -1,10 +1,8 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
 
-const char* ssid = "ap204";
-const char* password = ".,senha,";
-// const char* ssid = "REPLACE_WITH_YOUR_SSID";
-// const char* password = "REPLACE_WITH_YOUR_PASSWORD";
+const char* ssid = "REPLACE_WITH_YOUR_SSID";
+const char* password = "REPLACE_WITH_YOUR_PASSWORD";
 
 const char* serverName = "http://192.168.0.26:3000/sensor_datum/create";
 
