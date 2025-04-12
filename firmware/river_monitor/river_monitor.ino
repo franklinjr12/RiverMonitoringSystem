@@ -46,11 +46,11 @@ void loop() {
       int sensorId = 1;
       float value = 1.0;
       auto currentTime = time(nullptr);
-      // get formated as UTC time
-      String recodedAt = String(ctime(&currentTime));
+      strftime(buffer, sizeof(buffer), "%FT%TZ", gmtime(&currentTime));
+      String recodedAt = String(buffer);
       sprintf(buffer, "{\"payload\":[{\"sensor_id\":%d,\"value\":%f,\"recorded_at\":\"%s\"}]}", sensorId, value, recodedAt.c_str());
       String httpRequestData = buffer;
-      Serial.printf("writing %s to %s.", buffer, httpUrl.c_str());
+      Serial.printf("writing %s to %s.\n", buffer, httpUrl.c_str());
       int httpResponseCode = http.POST(httpRequestData);
       
       Serial.print("HTTP Response code: ");
