@@ -55,15 +55,15 @@ func precipitationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		http.Error(w, fmt.Sprintf("Weather API returned status: %d", resp.StatusCode), http.StatusInternalServerError)
-		return
-	}
-
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		http.Error(w, "Error reading response body", http.StatusInternalServerError)
 		log.Println("Error reading response body:", err)
+		return
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		http.Error(w, fmt.Sprintf("Weather API returned status: %d. Body: %v", resp.StatusCode, string(body)), http.StatusInternalServerError)
 		return
 	}
 
