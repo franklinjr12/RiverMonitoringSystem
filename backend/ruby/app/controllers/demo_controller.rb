@@ -32,6 +32,8 @@ class DemoController < ApplicationController
       )
     end
     test_user.devices.create!(name: 'Test Device') if test_user.devices.where(name: 'Test Device').empty?
+    test_user.devices.first.sensors.create!(sensor_type: 'level') if test_user.devices.first.sensors.where(sensor_type: 'level').empty?
+    test_user.devices.first.sensors.create!(sensor_type: 'temperature') if test_user.devices.first.sensors.where(sensor_type: 'temperature').empty?
     test_user 
   end
 end
