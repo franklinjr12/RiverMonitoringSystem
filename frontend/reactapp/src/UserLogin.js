@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import Box from '@mui/material/Box';
+import { useNavigate } from 'react-router-dom';
 
 const UserLogin = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -28,7 +30,7 @@ const UserLogin = () => {
         }
         alert("Login successful");
         localStorage.setItem('sessionToken', data["token"]);
-        window.location.href = '/devices';
+        navigate('/devices', { replace: true });
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -39,7 +41,7 @@ const UserLogin = () => {
     <Box m="10%">
       <Box display="flex">
         <Box flex={2}>
-          <img src="/login_image.jpeg" alt="Login" style={{ width: '100%', height: 'auto' }} />
+          <img src={`${process.env.PUBLIC_URL}/login_image.jpeg`} alt="Login" style={{ width: '100%', height: 'auto' }} />
         </Box>
         <Box flex={1} display="flex" flexDirection="column" justifyContent="center" alignItems="flex-start">
           <form onSubmit={handleSubmit} style={{ width: '100%' }}>

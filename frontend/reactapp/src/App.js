@@ -8,10 +8,13 @@ import DemoSensorData from './DemoSensorData';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
+  const repoBase = '/RiverMonitoringSystem';
+  const isGhPages = typeof window !== 'undefined' && window.location && window.location.pathname.startsWith(repoBase);
+  const basename = process.env.PUBLIC_URL || (isGhPages ? repoBase : '/');
   return (
     <div className="App">
       <main>
-        <Router>
+        <Router basename={basename}>
           <Routes>
             <Route path="/" element={<UserLogin />} />
             <Route path="/login" element={<UserLogin />} />

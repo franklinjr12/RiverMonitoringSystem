@@ -14,6 +14,9 @@ For building the docker image: docker build -t river_monitoring_system:latest .
 For running: docker run -p 3000:3000 --add-host=host.docker.internal:host-gateway -it river_monitoring_system:latest
 For running console on container: docker exec -it ID bin/rails c
 For building with specific dockerfile: docker build -f ./Dockerfile.dev.aws -t river_monitoring_system .
+For pushing to dockerhub:
+- docker push franklintavares/rivermonitoring:latest
+- docker tag river_monitoring_system franklintavares/rivermonitoring:latest
 
 * Database creation
 

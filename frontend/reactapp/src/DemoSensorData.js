@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const DemoSensorData = () => {
+    const navigate = useNavigate();
 
     useEffect(() => {
         const host = process.env.REACT_APP_BACKEND_HOST;
@@ -18,12 +20,14 @@ const DemoSensorData = () => {
                     return;
                 }
                 alert("Sensor data created");
-                window.location.href = '/devices';
+                navigate('/devices', { replace: true });
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
-    }, []);
+    }, [navigate]);
+
+    return null;
 }
 
 export default DemoSensorData;
