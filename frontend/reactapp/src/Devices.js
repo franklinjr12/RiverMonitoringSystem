@@ -5,8 +5,10 @@ import { Card, CardContent, Typography, Grid, Button } from '@mui/material';
 const Devices = () => {
   const [devices, setDevices] = useState([]);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const host = process.env.REACT_APP_BACKEND_HOST;
     fetch(`${host}/device/index`, {
       method: 'GET',
@@ -16,8 +18,14 @@ const Devices = () => {
       }
     })
       .then(response => response.json())
-      .then(data => setDevices(data))
-      .catch(error => console.error('Error fetching devices:', error));
+      .then(data => {
+        setDevices(data);
+        setLoading(false);
+      })
+      .catch(error => {
+        console.error('Error fetching devices:', error);
+        setLoading(false);
+      });
   }, []);
 
   const handleCardClick = (deviceId) => {
@@ -35,7 +43,11 @@ const Devices = () => {
         <Typography variant="h6">River Monitoring System</Typography>
         <button style={{ padding: '10px', cursor: 'pointer' }} onClick={handleLogout}>Logout</button>
       </nav>
-      {devices.length > 0 ? (
+      {loading ? (
+        <Typography variant="h6" component="p" style={{ marginTop: '20px' }}>
+          Loading...
+        </Typography>
+      ) : devices.length > 0 ? (
         <Grid container spacing={3} style={{ marginTop: '20px' }}>
           {devices.map(device => (
             <Grid item xs={12} sm={6} md={4} key={device.id}>
