@@ -1,50 +1,49 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import DownloadIcon from '@mui/icons-material/Download';
 
 const DownloadGraphDataButton = ({ dataSource, deviceId, startDate = null, endDate = null }) => {
-      const [data, setData] = useState([]);
-    
-      useEffect(() => {
-        const host = process.env.REACT_APP_BACKEND_HOST;
-        let url = host + `/sensor_datum/index?device_id=${deviceId}`;
-        if (startDate && endDate) {
-          url += `&start_date=${startDate}&end_date=${endDate}`;
-        }
-    
-        fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': localStorage.getItem('sessionToken')
+      const handleDownloadData = async () => {
+        try {
+          const host = process.env.REACT_APP_BACKEND_HOST;
+          let url = host + `/sensor_datum/index?device_id=${deviceId}`;
+          if (startDate && endDate) {
+            url += `&start_date=${startDate}&end_date=${endDate}`;
           }
-        })
-          .then(response => response.json())
-          .then(data => {
-            if (!data[dataSource]) {
-              console.error('Invalid data source:', dataSource);
-              return;
-            }
-            const sensorData = data[dataSource].map(item => ({
-              date: item.recorded_at,
-              [dataSource]: item.value
-            }));
-            setData(sensorData);
-          })
-          .catch(error => console.error('Error fetching data:', error));
-      }, [dataSource, deviceId, startDate, endDate]);
 
-      const downloadData = () => {
-        const csv = data.map(item => `${item.date};${item[dataSource]}`).join('\n');
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${dataSource}_data.csv`;
-        a.click();
+          const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': localStorage.getItem('sessionToken')
+            }
+          });
+
+          const json = await response.json();
+          if (!json[dataSource]) {
+            console.error('Invalid data source:', dataSource);
+            return;
+          }
+
+          const sensorData = json[dataSource].map(item => ({
+            date: item.recorded_at,
+            value: item.value
+          }));
+
+          const csv = sensorData.map(item => `${item.date};${item.value}`).join('\n');
+          const blob = new Blob([csv], { type: 'text/csv' });
+          const objectUrl = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = objectUrl;
+          a.download = `${dataSource}_data.csv`;
+          a.click();
+          URL.revokeObjectURL(objectUrl);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
       }
 
       return (
-        <button onClick={downloadData} style={{ border: 'none', backgroundColor: 'white', cursor: 'pointer' }}>
+        <button onClick={handleDownloadData} style={{ border: 'none', backgroundColor: 'white', cursor: 'pointer' }}>
           <DownloadIcon />
         </button>
       )
