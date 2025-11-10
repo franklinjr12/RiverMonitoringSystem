@@ -39,3 +39,6 @@ backend/ruby/credentials
 frontend/node_modules
 
 firmware/river_monitor/config.hpp
+
+jobs/device_simulator/bootstrap
+jobs/device_simulator/SensorSimulator.zip
