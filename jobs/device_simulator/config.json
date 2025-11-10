@@ -1,6 +1,6 @@
 {
-    "host": "http://localhost",
-    "port": 3000,
+    "host": "https://rivermonitoringbackend.onrender.com",
+    "port": 443,
     "route": "/sensor_datum/create",
     "timeout_seconds": 120,
     "sensors": [

@@ -4,11 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"io"
 	"math"
 	"math/rand"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -33,18 +31,30 @@ type Config struct {
 	Sensors        []SensorConfig `json:"sensors"`
 }
 
+var config Config
+
 func loadConfig() (Config, error) {
-	jsonFile, err := os.Open("config.json")
-	if err != nil {
-		return Config{}, err
+	// jsonFile, err := os.Open("config.json")
+	// if err != nil {
+	// 	return Config{}, err
+	// }
+	// defer jsonFile.Close()
+	// byteValue, err := io.ReadAll(jsonFile)
+	// if err != nil {
+	// 	return Config{}, err
+	// }
+	// var config Config
+	// json.Unmarshal(byteValue, &config)
+	// return config, nil
+	config = Config{
+		Host:           "http://localhost",
+		Port:           3000,
+		Route:          "/sensor_datum/create",
+		TimeoutSeconds: 120,
+		Sensors: []SensorConfig{
+			{SensorId: 1, MinValue: 1, MaxValue: 5, Frequency: 10},
+		},
 	}
-	defer jsonFile.Close()
-	byteValue, err := io.ReadAll(jsonFile)
-	if err != nil {
-		return Config{}, err
-	}
-	var config Config
-	json.Unmarshal(byteValue, &config)
 	return config, nil
 }
 
