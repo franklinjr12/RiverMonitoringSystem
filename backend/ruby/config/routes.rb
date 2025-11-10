@@ -18,12 +18,12 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   # Admin routes
-  scope :admin, module: :admin do
+  namespace :admin do
     get '/', to: 'dashboard#index', as: :admin
-    get 'login', to: 'login#new', as: :admin_login
+    get 'login', to: 'login#new', as: :login
     post 'login', to: 'login#create'
-    delete 'logout', to: 'login#destroy', as: :admin_logout
-    
+    delete 'logout', to: 'login#destroy', as: :logout
+
     resources :users, except: [:show]
     resources :devices, except: [:show]
     resources :sensors, except: [:show]

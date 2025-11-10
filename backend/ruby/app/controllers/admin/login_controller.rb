@@ -3,14 +3,14 @@ class Admin::LoginController < ApplicationController
   layout false
   
   def new
-    redirect_to admin_path if admin_user_signed_in?
+    redirect_to admin_admin_path if admin_user_signed_in?
   end
   
   def create
     user = User.find_by(email: params[:email])
     if user && user.authenticate(params[:password]) && user.email.include?('admin')
       session[:admin_user_id] = user.id
-      redirect_to admin_path, notice: 'Logged in successfully.'
+      redirect_to admin_admin_path, notice: 'Logged in successfully.'
     else
       flash[:alert] = 'Invalid email or password, or user is not an admin.'
       render :new, status: :unprocessable_entity
