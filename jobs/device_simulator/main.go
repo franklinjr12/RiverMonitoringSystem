@@ -2,8 +2,10 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"math"
 	"math/rand"
 	"net/http"
@@ -16,11 +18,13 @@ import (
 // for the values it will use a senoidal generator based on current time plus a random noise
 // for the config it will read a config.json file in the same director or use default values
 
+// === Program structs and functions ===
+
 type SensorConfig struct {
 	SensorId  int     `json:"sensor_id"`
 	MinValue  float64 `json:"min_value"`
 	MaxValue  float64 `json:"max_value"`
-	Frequency int     `json:"frequency"`
+	Frequency float64 `json:"frequency"`
 }
 
 type Config struct {
@@ -29,6 +33,12 @@ type Config struct {
 	Route          string         `json:"route"`
 	TimeoutSeconds int            `json:"timeout_seconds"`
 	Sensors        []SensorConfig `json:"sensors"`
+}
+
+type SensorData struct {
+	SensorId   int     `json:"sensor_id"`
+	Value      float64 `json:"value"`
+	RecordedAt string  `json:"recorded_at"`
 }
 
 var config Config
@@ -46,45 +56,50 @@ func loadConfig() (Config, error) {
 	// var config Config
 	// json.Unmarshal(byteValue, &config)
 	// return config, nil
+
 	config = Config{
 		Host:           "http://localhost",
 		Port:           3000,
 		Route:          "/sensor_datum/create",
 		TimeoutSeconds: 120,
 		Sensors: []SensorConfig{
-			{SensorId: 1, MinValue: 1, MaxValue: 5, Frequency: 10},
+			// {SensorId: 1, MinValue: 1, MaxValue: 5, Frequency: 0.0033},
+			{SensorId: 1, MinValue: 1, MaxValue: 5, Frequency: 1.0 / 3600.0},
 		},
 	}
 	return config, nil
 }
 
 // implement generateSensorData which receives a DeviceConfig and returns a float and an error
-func generateSensorData(sensorConfig SensorConfig) (float64, error) {
-	// Generate sinusoidal value based on current time
+func generateSensorData(sensorConfig SensorConfig) ([]SensorData, error) {
 	now := time.Now()
-	// Use frequency to determine the period (frequency in seconds)
-	period := float64(sensorConfig.Frequency)
-	// Create a sinusoidal wave based on time
-	timeValue := float64(now.Unix()) / period
-	sinValue := math.Sin(2 * math.Pi * timeValue)
+	period := 1.0 / sensorConfig.Frequency
+	samplesInDay := int(24 * 60 * 60 / period)
+	data := make([]SensorData, 0)
+	for i := samplesInDay; i > 0; i-- {
+		sampleTime := now.Add(-time.Duration(float64(time.Second) * period * float64(samplesInDay-i)))
+		sinValue := math.Sin(2 * math.Pi * float64(sampleTime.Second()))
+		// Scale to min-max range
+		rangeSize := sensorConfig.MaxValue - sensorConfig.MinValue
+		baseValue := sensorConfig.MinValue + (rangeSize/2)*(1+sinValue)
 
-	// Scale to min-max range
-	rangeSize := sensorConfig.MaxValue - sensorConfig.MinValue
-	baseValue := sensorConfig.MinValue + (rangeSize/2)*(1+sinValue)
+		// Add random noise (5% of range)
+		noise := (rand.Float64() - 0.5) * rangeSize * 0.05
+		value := baseValue + noise
 
-	// Add random noise (5% of range)
-	noise := (rand.Float64() - 0.5) * rangeSize * 0.05
-	value := baseValue + noise
+		// Clamp to min-max bounds
+		if value < sensorConfig.MinValue {
+			value = sensorConfig.MinValue
+		}
+		if value > sensorConfig.MaxValue {
+			value = sensorConfig.MaxValue
+		}
 
-	// Clamp to min-max bounds
-	if value < sensorConfig.MinValue {
-		value = sensorConfig.MinValue
+		dataEntry := SensorData{SensorId: sensorConfig.SensorId, Value: value, RecordedAt: sampleTime.Format(time.RFC3339)}
+		data = append(data, dataEntry)
 	}
-	if value > sensorConfig.MaxValue {
-		value = sensorConfig.MaxValue
-	}
 
-	return value, nil
+	return data, nil
 }
 
 // implement connectToServer which receives a Config and returns a http connection and an error
@@ -98,23 +113,9 @@ func connectToServer(config Config) (*http.Client, error) {
 }
 
 // implement sendToServer which receives a DeviceConfig and returns an error
-func sendToServer(config Config, sensorConfig SensorConfig, client *http.Client) error {
-	// Generate sensor data
-	value, err := generateSensorData(sensorConfig)
-	if err != nil {
-		return fmt.Errorf("failed to generate sensor data: %w", err)
-	}
-
-	// Create sensor data entry
-	sensorDataEntry := map[string]interface{}{
-		"sensor_id":   sensorConfig.SensorId,
-		"value":       value,
-		"recorded_at": time.Now().Format(time.RFC3339),
-	}
-
-	// Wrap in payload structure expected by the API
-	payload := map[string]interface{}{
-		"payload": []map[string]interface{}{sensorDataEntry},
+func sendToServer(url string, data []SensorData, client *http.Client) error {
+	payload := map[string][]SensorData{
+		"payload": data,
 	}
 
 	// Marshal to JSON
@@ -122,9 +123,6 @@ func sendToServer(config Config, sensorConfig SensorConfig, client *http.Client)
 	if err != nil {
 		return fmt.Errorf("failed to marshal JSON: %w", err)
 	}
-
-	// Construct URL (handle case where host already includes protocol)
-	url := fmt.Sprintf("%s:%d%s", config.Host, config.Port, config.Route)
 
 	// Send POST request
 	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonData))
@@ -141,29 +139,55 @@ func sendToServer(config Config, sensorConfig SensorConfig, client *http.Client)
 	return nil
 }
 
+// === Aws Lambda structs and functions ===
+
+func init() {
+}
+
+func handleRequest(ctx context.Context, event json.RawMessage) error {
+	log.Println("Event: ", event)
+	return nil
+}
+
+// === Main function ===
+
 func main() {
 
-	fmt.Println("Loading config")
+	log.Println("Loading config")
 	config, err := loadConfig()
 	if err != nil {
-		fmt.Println("Err: ", err)
+		log.Println("Err: ", err)
 		return
 	}
 
-	fmt.Println("Connecting to server")
+	log.Println("Connecting to server")
 	http, err := connectToServer(config)
 	if err != nil {
-		fmt.Println("Err: ", err)
+		log.Println("Err: ", err)
 		return
 	}
 
-	fmt.Println("Sending device data")
+	// Construct URL (handle case where host already includes protocol)
+	url := fmt.Sprintf("%s:%d%s", config.Host, config.Port, config.Route)
+
+	log.Println("Generating data")
+	sensorData := make([]SensorData, 0)
 	for _, e := range config.Sensors {
-		err := sendToServer(config, e, http)
+		data, err := generateSensorData(e)
 		if err != nil {
-			fmt.Println("Err: ", err)
+			log.Println("Err: ", err)
 			return
 		}
+		sensorData = append(sensorData, data...)
 	}
-	fmt.Println("Finished running")
+
+	log.Println("Sending sensor data")
+	err = sendToServer(url, sensorData, http)
+	if err != nil {
+		log.Println("Err: ", err)
+		return
+	}
+	log.Println("Finished running")
+
+	// lambda.Start(handleRequest)
 }
