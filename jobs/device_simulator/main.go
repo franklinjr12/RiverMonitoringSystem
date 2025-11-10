@@ -1,0 +1,159 @@
+package main
+
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"io"
+	"math"
+	"math/rand"
+	"net/http"
+	"os"
+	"time"
+)
+
+// this program will run as a service in a linux machine,
+// it will simulate a device sending sensor data to the server
+// in the format [{"sensor_id": 1, "value": 1.0, "recorded_at": "2021-01-01 12:00:00"}]
+// for the values it will use a senoidal generator based on current time plus a random noise
+// for the config it will read a config.json file in the same director or use default values
+
+type SensorConfig struct {
+	SensorId  int     `json:"sensor_id"`
+	MinValue  float64 `json:"min_value"`
+	MaxValue  float64 `json:"max_value"`
+	Frequency int     `json:"frequency"`
+}
+
+type Config struct {
+	Host           string         `json:"host"`
+	Port           int            `json:"port"`
+	Route          string         `json:"route"`
+	TimeoutSeconds int            `json:"timeout_seconds"`
+	Sensors        []SensorConfig `json:"sensors"`
+}
+
+func loadConfig() (Config, error) {
+	jsonFile, err := os.Open("config.json")
+	if err != nil {
+		return Config{}, err
+	}
+	defer jsonFile.Close()
+	byteValue, err := io.ReadAll(jsonFile)
+	if err != nil {
+		return Config{}, err
+	}
+	var config Config
+	json.Unmarshal(byteValue, &config)
+	return config, nil
+}
+
+// implement generateSensorData which receives a DeviceConfig and returns a float and an error
+func generateSensorData(sensorConfig SensorConfig) (float64, error) {
+	// Generate sinusoidal value based on current time
+	now := time.Now()
+	// Use frequency to determine the period (frequency in seconds)
+	period := float64(sensorConfig.Frequency)
+	// Create a sinusoidal wave based on time
+	timeValue := float64(now.Unix()) / period
+	sinValue := math.Sin(2 * math.Pi * timeValue)
+
+	// Scale to min-max range
+	rangeSize := sensorConfig.MaxValue - sensorConfig.MinValue
+	baseValue := sensorConfig.MinValue + (rangeSize/2)*(1+sinValue)
+
+	// Add random noise (5% of range)
+	noise := (rand.Float64() - 0.5) * rangeSize * 0.05
+	value := baseValue + noise
+
+	// Clamp to min-max bounds
+	if value < sensorConfig.MinValue {
+		value = sensorConfig.MinValue
+	}
+	if value > sensorConfig.MaxValue {
+		value = sensorConfig.MaxValue
+	}
+
+	return value, nil
+}
+
+// implement connectToServer which receives a Config and returns a http connection and an error
+func connectToServer(config Config) (*http.Client, error) {
+	// Create HTTP client with timeout
+	timeout := time.Duration(config.TimeoutSeconds) * time.Second
+	client := &http.Client{
+		Timeout: timeout,
+	}
+	return client, nil
+}
+
+// implement sendToServer which receives a DeviceConfig and returns an error
+func sendToServer(config Config, sensorConfig SensorConfig, client *http.Client) error {
+	// Generate sensor data
+	value, err := generateSensorData(sensorConfig)
+	if err != nil {
+		return fmt.Errorf("failed to generate sensor data: %w", err)
+	}
+
+	// Create sensor data entry
+	sensorDataEntry := map[string]interface{}{
+		"sensor_id":   sensorConfig.SensorId,
+		"value":       value,
+		"recorded_at": time.Now().Format(time.RFC3339),
+	}
+
+	// Wrap in payload structure expected by the API
+	payload := map[string]interface{}{
+		"payload": []map[string]interface{}{sensorDataEntry},
+	}
+
+	// Marshal to JSON
+	jsonData, err := json.Marshal(payload)
+	if err != nil {
+		return fmt.Errorf("failed to marshal JSON: %w", err)
+	}
+
+	// Construct URL (handle case where host already includes protocol)
+	url := fmt.Sprintf("%s:%d%s", config.Host, config.Port, config.Route)
+
+	// Send POST request
+	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return fmt.Errorf("failed to send POST request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	// Check response status
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return fmt.Errorf("server returned error status: %d", resp.StatusCode)
+	}
+
+	return nil
+}
+
+func main() {
+
+	fmt.Println("Loading config")
+	config, err := loadConfig()
+	if err != nil {
+		fmt.Println("Err: ", err)
+		return
+	}
+
+	fmt.Println("Connecting to server")
+	http, err := connectToServer(config)
+	if err != nil {
+		fmt.Println("Err: ", err)
+		return
+	}
+
+	fmt.Println("Sending device data")
+	for _, e := range config.Sensors {
+		err := sendToServer(config, e, http)
+		if err != nil {
+			fmt.Println("Err: ", err)
+			return
+		}
+	}
+	fmt.Println("Finished running")
+}

@@ -1,0 +1,9 @@
+{
+    "host": "http://localhost",
+    "port": 3000,
+    "route": "/sensor_datum/create",
+    "timeout_seconds": 120,
+    "sensors": [
+        {"sensor_id": 1, "min_value": 1, "max_value": 5, "frequency": 10}
+    ]
+}
