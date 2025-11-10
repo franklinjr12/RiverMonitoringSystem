@@ -1,0 +1,35 @@
+<h2>Devices</h2>
+
+<%= link_to "New Device", new_admin_device_path, class: "new-btn" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>User</th>
+      <th>Location</th>
+      <th>Created At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @devices.each do |device| %>
+      <tr>
+        <td><%= device.id %></td>
+        <td><%= device.name %></td>
+        <td><%= device.user.email %></td>
+        <td><%= device.location || "-" %></td>
+        <td><%= device.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+        <td class="actions">
+          <%= link_to "Edit", edit_admin_device_path(device) %> |
+          <%= link_to "Delete", admin_device_path(device), method: :delete, 
+              data: { confirm: "Are you sure?" }, class: "destroy" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p><%= link_to "Back to Dashboard", admin_path %></p>
+

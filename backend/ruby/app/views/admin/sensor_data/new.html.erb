@@ -1,0 +1,46 @@
+<h2>New Sensor Data</h2>
+
+<%= form_with model: [:admin, @sensor_datum], local: true do |form| %>
+  <% if @sensor_datum.errors.any? %>
+    <div style="color: #dc3545; margin-bottom: 20px;">
+      <h3><%= pluralize(@sensor_datum.errors.count, "error") %> prohibited this sensor data from being saved:</h3>
+      <ul>
+        <% @sensor_datum.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :sensor_id, "Sensor" %>
+    <%= form.select :sensor_id, options_from_collection_for_select(@sensors, :id, lambda { |s| "#{s.device.name} - #{s.sensor_type}" }, @sensor_datum.sensor_id), { prompt: "Select a sensor" } %>
+    <% if @sensor_datum.errors[:sensor_id].any? %>
+      <div class="error"><%= @sensor_datum.errors[:sensor_id].first %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :value %>
+    <%= form.number_field :value, step: :any %>
+    <% if @sensor_datum.errors[:value].any? %>
+      <div class="error"><%= @sensor_datum.errors[:value].first %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :recorded_at, "Recorded At" %>
+    <%= form.datetime_local_field :recorded_at, value: @sensor_datum.recorded_at&.strftime("%Y-%m-%dT%H:%M") %>
+    <% if @sensor_datum.errors[:recorded_at].any? %>
+      <div class="error"><%= @sensor_datum.errors[:recorded_at].first %></div>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Create Sensor Data" %>
+    <%= link_to "Cancel", admin_sensor_data_path, class: "cancel" %>
+  </div>
+<% end %>
+
+<p><%= link_to "Back to Sensor Data", admin_sensor_data_path %></p>
+

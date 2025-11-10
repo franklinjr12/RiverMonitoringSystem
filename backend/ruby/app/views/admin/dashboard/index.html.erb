@@ -1,0 +1,42 @@
+<div style="text-align: center;">
+  <h2>Admin Dashboard</h2>
+  <p>Select a model to manage:</p>
+  
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 30px;">
+    <div style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f8f9fa;">
+      <h3><%= link_to "Users", admin_users_path, style: "color: #007bff; text-decoration: none;" %></h3>
+      <p>Manage users (<%= User.count %> records)</p>
+    </div>
+    
+    <div style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f8f9fa;">
+      <h3><%= link_to "Devices", admin_devices_path, style: "color: #007bff; text-decoration: none;" %></h3>
+      <p>Manage devices (<%= Device.count %> records)</p>
+    </div>
+    
+    <div style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f8f9fa;">
+      <h3><%= link_to "Sensors", admin_sensors_path, style: "color: #007bff; text-decoration: none;" %></h3>
+      <p>Manage sensors (<%= Sensor.count %> records)</p>
+    </div>
+    
+    <div style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f8f9fa;">
+      <h3><%= link_to "Sensor Data", admin_sensor_data_path, style: "color: #007bff; text-decoration: none;" %></h3>
+      <p>Manage sensor data (<%= SensorDatum.count %> records)</p>
+    </div>
+    
+    <div style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f8f9fa;">
+      <h3><%= link_to "Alarms", admin_alarms_path, style: "color: #007bff; text-decoration: none;" %></h3>
+      <p>Manage alarms (<%= Alarm.count %> records)</p>
+    </div>
+    
+    <div style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f8f9fa;">
+      <h3><%= link_to "Commands", admin_commands_path, style: "color: #007bff; text-decoration: none;" %></h3>
+      <p>Manage commands (<%= Command.count %> records)</p>
+    </div>
+    
+    <div style="padding: 20px; border: 1px solid #ddd; border-radius: 5px; background-color: #f8f9fa;">
+      <h3><%= link_to "User Sessions", admin_user_sessions_path, style: "color: #007bff; text-decoration: none;" %></h3>
+      <p>Manage user sessions (<%= UserSession.count %> records)</p>
+    </div>
+  </div>
+</div>
+

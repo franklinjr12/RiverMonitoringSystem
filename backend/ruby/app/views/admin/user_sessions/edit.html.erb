@@ -1,0 +1,38 @@
+<h2>Edit User Session</h2>
+
+<%= form_with model: [:admin, @user_session], local: true do |form| %>
+  <% if @user_session.errors.any? %>
+    <div style="color: #dc3545; margin-bottom: 20px;">
+      <h3><%= pluralize(@user_session.errors.count, "error") %> prohibited this user session from being saved:</h3>
+      <ul>
+        <% @user_session.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :user_id, "User" %>
+    <%= form.select :user_id, options_from_collection_for_select(@users, :id, :email, @user_session.user_id), { prompt: "Select a user" } %>
+    <% if @user_session.errors[:user_id].any? %>
+      <div class="error"><%= @user_session.errors[:user_id].first %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :session_token, "Session Token" %>
+    <%= form.text_field :session_token %>
+    <% if @user_session.errors[:session_token].any? %>
+      <div class="error"><%= @user_session.errors[:session_token].first %></div>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Update User Session" %>
+    <%= link_to "Cancel", admin_user_sessions_path, class: "cancel" %>
+  </div>
+<% end %>
+
+<p><%= link_to "Back to User Sessions", admin_user_sessions_path %></p>
+

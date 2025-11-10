@@ -1,0 +1,47 @@
+<h2>Edit Alarm</h2>
+
+<%= form_with model: [:admin, @alarm], local: true do |form| %>
+  <% if @alarm.errors.any? %>
+    <div style="color: #dc3545; margin-bottom: 20px;">
+      <h3><%= pluralize(@alarm.errors.count, "error") %> prohibited this alarm from being saved:</h3>
+      <ul>
+        <% @alarm.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :device_id, "Device" %>
+    <%= form.select :device_id, options_from_collection_for_select(@devices, :id, :name, @alarm.device_id), { prompt: "Select a device" } %>
+    <% if @alarm.errors[:device_id].any? %>
+      <div class="error"><%= @alarm.errors[:device_id].first %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :trigger_condition, "Trigger Condition" %>
+    <%= form.text_field :trigger_condition, placeholder: "e.g., level > 50" %>
+    <% if @alarm.errors[:trigger_condition].any? %>
+      <div class="error"><%= @alarm.errors[:trigger_condition].first %></div>
+    <% end %>
+    <small style="color: #6c757d;">Format: "type operator value" (e.g., "level > 50", "temperature < 30")</small>
+  </div>
+
+  <div class="field">
+    <%= form.label :notification_endpoint, "Notification Endpoint" %>
+    <%= form.text_field :notification_endpoint, placeholder: "e.g., https://example.com/webhook" %>
+    <% if @alarm.errors[:notification_endpoint].any? %>
+      <div class="error"><%= @alarm.errors[:notification_endpoint].first %></div>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Update Alarm" %>
+    <%= link_to "Cancel", admin_alarms_path, class: "cancel" %>
+  </div>
+<% end %>
+
+<p><%= link_to "Back to Alarms", admin_alarms_path %></p>
+

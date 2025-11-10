@@ -1,0 +1,35 @@
+<h2>Commands</h2>
+
+<%= link_to "New Command", new_admin_command_path, class: "new-btn" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Device</th>
+      <th>Command Type</th>
+      <th>Parameters</th>
+      <th>Created At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @commands.each do |command| %>
+      <tr>
+        <td><%= command.id %></td>
+        <td><%= command.device.name %> (User: <%= command.device.user.email %>)</td>
+        <td><%= command.command_type %></td>
+        <td><%= command.parameters.to_json %></td>
+        <td><%= command.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+        <td class="actions">
+          <%= link_to "Edit", edit_admin_command_path(command) %> |
+          <%= link_to "Delete", admin_command_path(command), method: :delete, 
+              data: { confirm: "Are you sure?" }, class: "destroy" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p><%= link_to "Back to Dashboard", admin_path %></p>
+

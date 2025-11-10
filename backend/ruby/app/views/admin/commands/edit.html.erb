@@ -1,0 +1,47 @@
+<h2>Edit Command</h2>
+
+<%= form_with model: [:admin, @command], local: true do |form| %>
+  <% if @command.errors.any? %>
+    <div style="color: #dc3545; margin-bottom: 20px;">
+      <h3><%= pluralize(@command.errors.count, "error") %> prohibited this command from being saved:</h3>
+      <ul>
+        <% @command.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :device_id, "Device" %>
+    <%= form.select :device_id, options_from_collection_for_select(@devices, :id, :name, @command.device_id), { prompt: "Select a device" } %>
+    <% if @command.errors[:device_id].any? %>
+      <div class="error"><%= @command.errors[:device_id].first %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :command_type, "Command Type" %>
+    <%= form.text_field :command_type, placeholder: "e.g., set_sampling_rate, reboot" %>
+    <% if @command.errors[:command_type].any? %>
+      <div class="error"><%= @command.errors[:command_type].first %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :parameters, "Parameters (JSON)" %>
+    <%= form.text_area :parameters, value: @command.parameters&.to_json, placeholder: '{"key": "value"}' %>
+    <% if @command.errors[:parameters].any? %>
+      <div class="error"><%= @command.errors[:parameters].first %></div>
+    <% end %>
+    <small style="color: #6c757d;">Enter JSON format, e.g., {"sampling_rate": 60}</small>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Update Command" %>
+    <%= link_to "Cancel", admin_commands_path, class: "cancel" %>
+  </div>
+<% end %>
+
+<p><%= link_to "Back to Commands", admin_commands_path %></p>
+

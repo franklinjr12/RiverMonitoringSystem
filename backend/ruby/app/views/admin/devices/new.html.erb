@@ -1,0 +1,55 @@
+<h2>New Device</h2>
+
+<%= form_with model: [:admin, @device], local: true do |form| %>
+  <% if @device.errors.any? %>
+    <div style="color: #dc3545; margin-bottom: 20px;">
+      <h3><%= pluralize(@device.errors.count, "error") %> prohibited this device from being saved:</h3>
+      <ul>
+        <% @device.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+    <% if @device.errors[:name].any? %>
+      <div class="error"><%= @device.errors[:name].first %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :user_id, "User" %>
+    <%= form.select :user_id, options_from_collection_for_select(@users, :id, :email, @device.user_id), { prompt: "Select a user" } %>
+    <% if @device.errors[:user_id].any? %>
+      <div class="error"><%= @device.errors[:user_id].first %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :location %>
+    <%= form.text_field :location %>
+    <% if @device.errors[:location].any? %>
+      <div class="error"><%= @device.errors[:location].first %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :configuration, "Configuration (JSON)" %>
+    <%= form.text_area :configuration, value: @device.configuration&.to_json, placeholder: '{"key": "value"}' %>
+    <% if @device.errors[:configuration].any? %>
+      <div class="error"><%= @device.errors[:configuration].first %></div>
+    <% end %>
+    <small style="color: #6c757d;">Enter JSON format, e.g., {"sampling_rate": 60, "alert_threshold": 100}</small>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Create Device" %>
+    <%= link_to "Cancel", admin_devices_path, class: "cancel" %>
+  </div>
+<% end %>
+
+<p><%= link_to "Back to Devices", admin_devices_path %></p>
+

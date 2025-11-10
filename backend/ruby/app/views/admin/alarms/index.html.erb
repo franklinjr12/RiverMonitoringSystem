@@ -1,0 +1,35 @@
+<h2>Alarms</h2>
+
+<%= link_to "New Alarm", new_admin_alarm_path, class: "new-btn" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Device</th>
+      <th>Trigger Condition</th>
+      <th>Notification Endpoint</th>
+      <th>Created At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @alarms.each do |alarm| %>
+      <tr>
+        <td><%= alarm.id %></td>
+        <td><%= alarm.device.name %> (User: <%= alarm.device.user.email %>)</td>
+        <td><%= alarm.trigger_condition %></td>
+        <td><%= alarm.notification_endpoint %></td>
+        <td><%= alarm.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+        <td class="actions">
+          <%= link_to "Edit", edit_admin_alarm_path(alarm) %> |
+          <%= link_to "Delete", admin_alarm_path(alarm), method: :delete, 
+              data: { confirm: "Are you sure?" }, class: "destroy" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p><%= link_to "Back to Dashboard", admin_path %></p>
+

@@ -57,6 +57,7 @@ class SensorDatumController < ApplicationController
     end
   end
 
+  # recieves data in the format of [{"sensor_id": 1, "value": 1.0, "recorded_at": "2021-01-01 12:00:00"}]
   def create
     if params[:payload][0][:sensor_id].present? && params[:payload][0][:value].present?
       sensor = Sensor.find(params[:payload][0][:sensor_id].to_i)

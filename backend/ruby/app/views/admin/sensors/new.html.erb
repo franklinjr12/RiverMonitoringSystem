@@ -1,0 +1,38 @@
+<h2>New Sensor</h2>
+
+<%= form_with model: [:admin, @sensor], local: true do |form| %>
+  <% if @sensor.errors.any? %>
+    <div style="color: #dc3545; margin-bottom: 20px;">
+      <h3><%= pluralize(@sensor.errors.count, "error") %> prohibited this sensor from being saved:</h3>
+      <ul>
+        <% @sensor.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :device_id, "Device" %>
+    <%= form.select :device_id, options_from_collection_for_select(@devices, :id, :name, @sensor.device_id), { prompt: "Select a device" } %>
+    <% if @sensor.errors[:device_id].any? %>
+      <div class="error"><%= @sensor.errors[:device_id].first %></div>
+    <% end %>
+  </div>
+
+  <div class="field">
+    <%= form.label :sensor_type, "Sensor Type" %>
+    <%= form.text_field :sensor_type, placeholder: "e.g., level, temperature" %>
+    <% if @sensor.errors[:sensor_type].any? %>
+      <div class="error"><%= @sensor.errors[:sensor_type].first %></div>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Create Sensor" %>
+    <%= link_to "Cancel", admin_sensors_path, class: "cancel" %>
+  </div>
+<% end %>
+
+<p><%= link_to "Back to Sensors", admin_sensors_path %></p>
+

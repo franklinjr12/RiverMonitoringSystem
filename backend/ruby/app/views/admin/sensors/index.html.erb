@@ -1,0 +1,33 @@
+<h2>Sensors</h2>
+
+<%= link_to "New Sensor", new_admin_sensor_path, class: "new-btn" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Sensor Type</th>
+      <th>Device</th>
+      <th>Created At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sensors.each do |sensor| %>
+      <tr>
+        <td><%= sensor.id %></td>
+        <td><%= sensor.sensor_type %></td>
+        <td><%= sensor.device.name %> (User: <%= sensor.device.user.email %>)</td>
+        <td><%= sensor.created_at.strftime("%Y-%m-%d %H:%M:%S") %></td>
+        <td class="actions">
+          <%= link_to "Edit", edit_admin_sensor_path(sensor) %> |
+          <%= link_to "Delete", admin_sensor_path(sensor), method: :delete, 
+              data: { confirm: "Are you sure?" }, class: "destroy" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p><%= link_to "Back to Dashboard", admin_path %></p>
+
