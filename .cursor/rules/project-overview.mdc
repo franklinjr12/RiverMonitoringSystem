@@ -1,0 +1,54 @@
+---
+alwaysApply: true
+---
+River Monitoring System – AI Coding Assistant Guidelines
+Project Overview:
+This is a full-stack river level monitoring application. The backend is primarily Ruby on Rails (with some Go microservices/tools), the frontend is a React app, and the database is PostgreSQL. The system allows users to manage devices, view river level and temperature data, set alarms, and send remote configuration commands.
+General Principles:
+Respect the Stack:
+Backend: Ruby on Rails (main app), Go (microservices/tools).
+Frontend: React (JavaScript).
+Database: PostgreSQL.
+Separation of Concerns:
+Keep backend, frontend, and device/firmware code separate.
+Do not mix business logic between frontend and backend.
+RESTful API:
+Rails controllers should follow REST conventions.
+Data for the frontend should be provided via JSON APIs.
+Security:
+Never expose sensitive data (e.g., credentials, secrets).
+Validate and sanitize all user input.
+Use Rails’ built-in security features (CSRF, strong params, etc.).
+Testing:
+All new features and bug fixes should include or update tests.
+Use Rails test suite for backend, Jest/React Testing Library for frontend.
+Documentation:
+Update README and in-code comments for any significant changes.
+Document new endpoints, models, or major logic changes.
+Directory Structure:
+backend/ruby/: Main Rails app (controllers, models, views, jobs, services, etc.).
+backend/go/: Go microservices/tools (e.g., device auth, message handling).
+frontend/reactapp/: React frontend.
+firmware/: Device firmware code.
+database/: Database-related Dockerfiles.
+services/: Additional services (e.g., weather forecast).
+Workflow:
+Feature Additions:
+Add backend logic in Rails, expose via API, then consume in React frontend.
+For device communication, use Go tools/services as needed.
+Bug Fixes:
+Write regression tests before fixing.
+Reference related files and keep changes minimal and focused.
+Refactoring:
+Refactor only with sufficient test coverage.
+Avoid breaking API contracts between backend and frontend.
+AI Assistant Specifics:
+Always check for existing conventions and patterns before introducing new ones.
+When in doubt, prefer explicitness and clarity over cleverness.
+Propose todos for multi-step or cross-cutting changes.
+Use semantic and grep search to fully understand code before making changes.
+If a change affects multiple layers (backend, frontend, device), coordinate updates and document integration points.
+Never remove or alter device/firmware code unless explicitly requested.
+Communication:
+Summarize the impact of changes in plain language.
+If unsure about requirements, ask for clarification before proceeding.

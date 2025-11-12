@@ -10,6 +10,8 @@ import (
 	"math/rand"
 	"net/http"
 	"time"
+
+	"github.com/aws/aws-lambda-go/lambda"
 )
 
 // this program will run as a service in a linux machine,
@@ -64,7 +66,8 @@ func loadConfig() (Config, error) {
 		TimeoutSeconds: 120,
 		Sensors: []SensorConfig{
 			// {SensorId: 1, MinValue: 1, MaxValue: 5, Frequency: 0.0033},
-			{SensorId: 1, MinValue: 1, MaxValue: 5, Frequency: 1.0 / 3600.0},
+			{SensorId: 3, MinValue: 1, MaxValue: 5, Frequency: 1.0 / 3600.0},
+			{SensorId: 4, MinValue: 20, MaxValue: 35, Frequency: 1.0 / 3600.0},
 		},
 	}
 	return config, nil
@@ -139,20 +142,9 @@ func sendToServer(url string, data []SensorData, client *http.Client) error {
 	return nil
 }
 
-// === Aws Lambda structs and functions ===
+// === Run useful code helper function
 
-func init() {
-}
-
-func handleRequest(ctx context.Context, event json.RawMessage) error {
-	log.Println("Event: ", event)
-	return nil
-}
-
-// === Main function ===
-
-func main() {
-
+func doWork() {
 	log.Println("Loading config")
 	config, err := loadConfig()
 	if err != nil {
@@ -188,6 +180,29 @@ func main() {
 		return
 	}
 	log.Println("Finished running")
+}
 
-	// lambda.Start(handleRequest)
+// === Aws Lambda structs and functions ===
+
+func init() {
+}
+
+func handleRequest(ctx context.Context, event json.RawMessage) error {
+	log.Println("Event: ", string(event))
+	var eventJson map[string]any
+	err := json.Unmarshal(event, &eventJson)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+	if eventJson["detail-type"] == "Scheduled Event" && eventJson["source"] == "aws.scheduler" {
+		doWork()
+	}
+	return nil
+}
+
+// === Main function ===
+
+func main() {
+	lambda.Start(handleRequest)
 }

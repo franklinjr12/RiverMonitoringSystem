@@ -15,8 +15,8 @@ For running: docker run -p 3000:3000 --add-host=host.docker.internal:host-gatewa
 For running console on container: docker exec -it ID bin/rails c
 For building with specific dockerfile: docker build -f ./Dockerfile.dev.aws -t river_monitoring_system .
 For pushing to dockerhub:
-- docker push franklintavares/rivermonitoring:latest
 - docker tag river_monitoring_system franklintavares/rivermonitoring:latest
+- docker push franklintavares/rivermonitoring:latest
 
 * Database creation
 
