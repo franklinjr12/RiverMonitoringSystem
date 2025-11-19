@@ -1,0 +1,88 @@
+# syntax = docker/dockerfile:1.7
+
+# Build the Lambda deployment bundle using Ruby 3.4.7.
+# ARG RUBY_VERSION=3.4.7
+# FROM registry.docker.com/library/ruby:${RUBY_VERSION}-slim AS builder
+FROM public.ecr.aws/lambda/ruby:3.4 AS builder
+
+WORKDIR /rails
+
+ENV \
+  LANG=C.UTF-8 \
+  LC_ALL=C.UTF-8 \
+  RAILS_ENV=production \
+  BUNDLE_WITHOUT="development test" \
+  BUNDLE_DEPLOYMENT=true \
+  BUNDLE_PATH=/rails/vendor/bundle \
+  SECRET_KEY_BASE=dummy
+  # BUNDLE_WITHOUT="production test" \
+
+# BUNDLE_DEPLOYMENT=0 \ # for real deployment this should be 1 to freeze lockfile
+
+
+# System dependencies for native gem builds (nokogiri, pg, etc.) and packaging.
+# RUN apt-get update -qq && \
+#     apt-get install --no-install-recommends -y \
+# build-essential \
+# git \
+# libpq-dev \
+# libvips \
+# libyaml-dev \
+# pkg-config \
+# gcc \
+# gcc-c++ \
+# make \
+# zip && \
+# rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+RUN dnf install -y \
+  ruby \
+  ruby-devel \
+  gcc gcc-c++ make \
+  git \
+  libpq-devel \
+  libyaml-devel \
+  libxml2-devel \
+  libxslt-devel \
+  zip
+
+# Copy application code and compile assets (if any).
+COPY . .
+
+# Install gems in deployment mode.
+COPY Gemfile Gemfile.lock ./
+
+# RUN rm Gemfile.lock
+
+# set specific platform
+RUN bundle lock --update --add-platform x86_64-linux --add-platform ruby
+# RUN bundle lock --update --add-platform x86_64-linux
+
+# ENV NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+ENV BUNDLE_FORCE_RUBY_PLATFORM=true
+
+# with updating lockfile
+# RUN bundle config set without 'production test' && \
+RUN bundle config set without 'development test' && \
+    bundle config set --local path 'vendor/bundle' \
+    bundle install --jobs 4 --retry 3
+
+# not updating lockfile
+# RUN bundle config set deployment 'true' && \
+#     bundle config set without 'production test' && \
+#     bundle install --jobs 4 --retry 3
+
+# RUN bundle exec rails assets:precompile # not needed
+
+# Create the Lambda-ready bundle, excluding transient directories and Bundler cache.
+RUN rm -rf tmp/* log/* storage/* && \
+    zip -r tmp/lambda.zip . -x 'tmp/*' 'log/*' 'storage/*' 'vendor/bundle/ruby/*/cache/*' '.cursor' 'test/*' 'build/*' 'Dockerfile*' '*.md'
+
+# Minimal image that only contains the artifact.
+# FROM busybox:1.37.0-uclibc AS artifact
+# COPY --from=builder /tmp/lambda.zip /lambda.zip
+
+# run with docker run --rm -v "${PWD}/build:/rails/build" river_backend:latest
+# ENTRYPOINT ["sh", "-c", "cp tmp/lambda.zip /rails/build/lambda.zip"]
+ENTRYPOINT ["bash"]
+

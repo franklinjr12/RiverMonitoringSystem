@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   def authenticate_user
     token = request.headers['Authorization']
     if token.present?
-      user_session = UserSession.find_by(session_token: token)
+      user_session = UserSession.find_by_with_timeout(session_token: token)
       if user_session
         @current_user = user_session.user
       else

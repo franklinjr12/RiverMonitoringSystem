@@ -22,10 +22,10 @@ default: &default
   username: <%= ENV['DB_USER'] || 'postgres' %>
   password: <%= ENV['DB_PASS'] || 'postgres' %>
   host: <%= ENV['DB_HOST'] || 'localhost' %>
-  port: <%= ENV['DB_PORT'] || 5432 %>
+  port: <%= ENV['DB_PORT'].to_i || 5432 %>
   <% if ENV['DB_SSL'].present? %>
   sslmode: <%= "#{ENV['DB_SSL']}" %>
-  sslrootcert: <%= "#{ENV['DB_SSL_ROOTCERT']}" %>
+  # sslrootcert: <%= "#{ENV['DB_SSL_ROOTCERT']}" %>
   <% end %>
 
 development:
@@ -92,6 +92,13 @@ test:
 # Read https://guides.rubyonrails.org/configuring.html#configuring-a-database
 # for a full overview on how database connection configuration can be specified.
 #
+# production:
+#   <<: *default
+#   database: <%= "#{ENV['DB_PREFIX']}_production" %>
 production:
   <<: *default
-  database: <%= "#{ENV['DB_PREFIX']}_production" %>
+  <% if ENV['DB_NAME'].present? %>
+  database: <%= "#{ENV['DB_NAME']}" %>
+  <% else %>
+  database: <%= "#{ENV['DB_PREFIX']}_development" %>
+  <% end %>

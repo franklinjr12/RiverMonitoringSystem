@@ -121,6 +121,10 @@ GEM
     jbuilder (2.12.0)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
+    lambda-console-ruby (1.0.0)
+    lamby (5.2.1)
+      lambda-console-ruby
+      rack
     logger (1.6.0)
     loofah (2.22.0)
       crass (~> 1.0.2)
@@ -261,6 +265,7 @@ DEPENDENCIES
   dotenv-rails
   importmap-rails
   jbuilder
+  lamby (~> 5.1)
   pg (~> 1.1)
   puma (>= 5.0)
   rack-attack
