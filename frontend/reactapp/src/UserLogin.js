@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
+import NeumorphicButton from './NeumorphicButton';
+import NeumorphicInput from './NeumorphicInput';
 
 const UserLogin = () => {
   const [username, setUsername] = useState('');
@@ -56,28 +58,26 @@ const UserLogin = () => {
               </Typography>
             </Box>
           ) : (
-          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+          <form onSubmit={handleSubmit} style={{ width: '100%', margin: '20px' }}>
             <Box display="flex" flexDirection="column" mb={2}>
-              <label>
-                Username:
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-              </label>
+              <NeumorphicInput
+                label="Username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                autoComplete="username"
+              />
             </Box>
             <Box display="flex" flexDirection="column" mb={2}>
-              <label>
-                Password:
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </label>
+              <NeumorphicInput
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+              />
             </Box>
-            <button type="submit">Log in</button>
+            <NeumorphicButton type="submit">Log in</NeumorphicButton>
           </form>
           )}
         </Box>
