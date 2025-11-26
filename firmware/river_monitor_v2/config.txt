@@ -1,0 +1,8 @@
+1
+1
+host.docker.internal
+3000
+/sensor_datum/create
+1
+1
+2
