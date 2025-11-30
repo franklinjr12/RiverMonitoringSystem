@@ -1,0 +1,13 @@
+services:
+  river-monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: river_monitor_dev
+    volumes:
+      - ./:/app           # Hot-reload source into container
+    working_dir: /app
+    # command: ["bash"]
+    command: "./river_monitor"
+    stdin_open: true
+    tty: true

@@ -65,7 +65,7 @@ void loop() {
         log_error("Error current time\0");
     }
     char time_str[TIME_STR_LEN];
-    format_time(now, time_str);
+    format_time_str(now, time_str);
 
     const int buffer_size = 512;
     char buffer[buffer_size];
