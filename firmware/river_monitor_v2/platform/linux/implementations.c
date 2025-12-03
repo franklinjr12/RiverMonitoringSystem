@@ -331,6 +331,13 @@ int read_sensor_readings(
     return idx;  // number of records filled into arrays
 }
 
+int clear_readings() {
+    FILE* f = fopen(STORAGE_FILE, "w");
+    if (!f) return -1;
+    fclose(f);
+    return NO_ERROR;
+}
+
 //
 // TIME FUNCTIONS
 //

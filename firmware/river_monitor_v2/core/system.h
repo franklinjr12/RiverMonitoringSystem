@@ -19,6 +19,7 @@ int read_config(Config* conf);
 int has_readings(unsigned int* readings_stored);
 int write_sensor_readings(float level, float temperature, time_t at);
 int read_sensor_readings(float* level_readings, float* temperature_readings, time_t* at_readings);
+int clear_readings();
 
 int sleep_for(unsigned long seconds);
 
