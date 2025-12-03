@@ -3,6 +3,7 @@
 #include "../../core/system.h"
 #include "../../core/sensor_interface.h"
 
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +18,7 @@
 static const char* STORAGE_FILE = "readings.csv";
 static const char* CONFIG_FILE  = "config.bin";
 static const char* KV_FILE  = "kv.bin";
+static const char* LAST_UPLOAD_KEY  = "_last_upload";
 
 //
 // ─────────────────────────────────────────────────────────────
@@ -354,13 +356,11 @@ int format_time_tm(time_t time, struct tm* out_tm) {
 }
 
 int write_last_upload_time(time_t in) {
-
-    return NO_ERROR;
+    return write_kv((char*)LAST_UPLOAD_KEY, &in, sizeof(in));
 }
 
 int read_last_upload_time(time_t* out) {
-
-    return NO_ERROR;
+    return read_kv((char*)LAST_UPLOAD_KEY, out, sizeof(time_t));
 }
 
 
@@ -377,11 +377,23 @@ int sleep_for(unsigned long seconds) {
 //     return NO_ERROR;
 // }
 int log_error(char* msg) {
-    fprintf(stderr, "[ERROR] %s\n", msg);
+    printf("[ERROR] %s\n", msg);
     return NO_ERROR;
 }
 int log_info(char* msg) {
     printf("[INFO] %s\n", msg);
+    return NO_ERROR;
+}
+
+
+int log_info_f(char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+
+    printf("[INFO] ");
+    vprintf(fmt, args);   // print the formatted user message
+
+    va_end(args);
     return NO_ERROR;
 }
 

@@ -75,18 +75,28 @@ void loop() {
     }
 
     // need to check if should send to server before sending
+    time_t last_upload = 0;
+    read_last_upload_time(&last_upload);
 
-    ret = connect_to_server(&config);
-    if (ret != NO_ERROR) {
-        log_error("Error connecting to server\0");
-    } else {
-        buffer[strlen(buffer)-1] = '\0'; // to remove last comma
-        char payload_buffer[buffer_size];
-        sprintf(payload_buffer, "{\"payload\":[%s]}", buffer);
-        ret = send_payload(payload_buffer);
+    double time_diff_seconds = difftime(now, last_upload);
+
+    log_info_f("now %ld last %ld diff %f upload_interval %ld\n", now, last_upload, time_diff_seconds, config.upload_interval_seconds);
+
+    if (time_diff_seconds >= (double)config.upload_interval_seconds) {
+        ret = connect_to_server(&config);
         if (ret != NO_ERROR) {
-            log_error("Error on sending data to server\0");
+            log_error("Error connecting to server\0");
+        } else {
+            buffer[strlen(buffer)-1] = '\0'; // to remove last comma
+            char payload_buffer[buffer_size];
+            sprintf(payload_buffer, "{\"payload\":[%s]}", buffer);
+            ret = send_payload(payload_buffer);
+            if (ret != NO_ERROR) {
+                log_error("Error on sending data to server\0");
+            }
+            write_last_upload_time(now);
         }
-        sleep_for(config.sensor_read_interval_seconds);
     }
+
+    sleep_for(config.sensor_read_interval_seconds);
 }

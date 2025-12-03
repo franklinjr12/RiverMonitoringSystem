@@ -33,5 +33,6 @@ int should_send_payload(Config* conf);
 
 int log_error(char* msg);
 int log_info(char* msg);
+int log_info_f(char* fmt, ...);
 
 #endif
