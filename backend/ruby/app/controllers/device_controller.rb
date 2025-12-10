@@ -8,15 +8,36 @@ class DeviceController < ApplicationController
       render json: { error: "No devices found for the specified user" }, status: :bad_request
       return
     end
-    devices = devices.pluck(:id, :name, :location).map do |id, name, location|
-      { id: id, name: name, location: location }
+    devices_data = devices.map do |device|
+      last_read_level = device.sensors.where(sensor_type: :level).first.sensor_data.order(created_at: :desc).last
+      last_read_temperature = device.sensors.where(sensor_type: :temperature).first.sensor_data.order(created_at: :desc).last
+      last_read_at = last_read_level.created_at > last_read_temperature.created_at ? last_read_level.created_at : last_read_temperature.created_at
+      {
+        id: device.id,
+        name: device.name,
+        location: device.location,
+        last_read_at: last_read_at,
+        last_level: last_read_level.value,
+        last_temperature: last_read_temperature.value,
+        status: device_status(last_read_at)
+      }
     end
-    render json: devices
+    render json: devices_data
   end
   
   private
 
   def set_cors_headers
     response.set_header('Access-Control-Allow-Origin', '*')
+  end
+
+  def device_status(last_read_at)
+    if last_read_at > 24.hours.ago
+      :online
+    elsif last_read_at > 48.hours.ago
+      :delayed
+    else
+      :offline
+    end
   end
 end
