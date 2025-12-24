@@ -60,8 +60,10 @@ func loadConfig() (Config, error) {
 	// return config, nil
 
 	config = Config{
-		Host:           "http://localhost",
-		Port:           3000,
+		// Host:           "http://localhost",
+		// Port:           3000,
+		Host:           "https://rivermonitoringbackend.onrender.com",
+		Port:           443,
 		Route:          "/sensor_datum/create",
 		TimeoutSeconds: 120,
 		Sensors: []SensorConfig{
@@ -73,34 +75,59 @@ func loadConfig() (Config, error) {
 	return config, nil
 }
 
-// implement generateSensorData which receives a DeviceConfig and returns a float and an error
+// to send once a day in bulk
+// func generateSensorData(sensorConfig SensorConfig) ([]SensorData, error) {
+// 	now := time.Now()
+// 	period := 1.0 / sensorConfig.Frequency
+// 	samplesInDay := int(24 * 60 * 60 / period)
+// 	data := make([]SensorData, 0)
+// 	for i := samplesInDay; i > 0; i-- {
+// 		sampleTime := now.Add(-time.Duration(float64(time.Second) * period * float64(samplesInDay-i)))
+// 		sinValue := math.Sin(2 * math.Pi * float64(sampleTime.Second()))
+// 		// Scale to min-max range
+// 		rangeSize := sensorConfig.MaxValue - sensorConfig.MinValue
+// 		baseValue := sensorConfig.MinValue + (rangeSize/2)*(1+sinValue)
+
+// 		// Add random noise (5% of range)
+// 		noise := (rand.Float64() - 0.5) * rangeSize * 0.05
+// 		value := baseValue + noise
+
+// 		// Clamp to min-max bounds
+// 		if value < sensorConfig.MinValue {
+// 			value = sensorConfig.MinValue
+// 		}
+// 		if value > sensorConfig.MaxValue {
+// 			value = sensorConfig.MaxValue
+// 		}
+
+// 		dataEntry := SensorData{SensorId: sensorConfig.SensorId, Value: value, RecordedAt: sampleTime.Format(time.RFC3339)}
+// 		data = append(data, dataEntry)
+// 	}
+
+// 	return data, nil
+// }
+
+// to send every 10m to keep container up
 func generateSensorData(sensorConfig SensorConfig) ([]SensorData, error) {
 	now := time.Now()
-	period := 1.0 / sensorConfig.Frequency
-	samplesInDay := int(24 * 60 * 60 / period)
-	data := make([]SensorData, 0)
-	for i := samplesInDay; i > 0; i-- {
-		sampleTime := now.Add(-time.Duration(float64(time.Second) * period * float64(samplesInDay-i)))
-		sinValue := math.Sin(2 * math.Pi * float64(sampleTime.Second()))
-		// Scale to min-max range
-		rangeSize := sensorConfig.MaxValue - sensorConfig.MinValue
-		baseValue := sensorConfig.MinValue + (rangeSize/2)*(1+sinValue)
+	sinValue := math.Sin(2 * math.Pi * float64(now.Second()))
+	data := make([]SensorData, 1)
+	rangeSize := sensorConfig.MaxValue - sensorConfig.MinValue
+	baseValue := sensorConfig.MinValue + (rangeSize/2)*(1+sinValue)
 
-		// Add random noise (5% of range)
-		noise := (rand.Float64() - 0.5) * rangeSize * 0.05
-		value := baseValue + noise
+	// Add random noise (5% of range)
+	noise := (rand.Float64() - 0.5) * rangeSize * 0.05
+	value := baseValue + noise
 
-		// Clamp to min-max bounds
-		if value < sensorConfig.MinValue {
-			value = sensorConfig.MinValue
-		}
-		if value > sensorConfig.MaxValue {
-			value = sensorConfig.MaxValue
-		}
-
-		dataEntry := SensorData{SensorId: sensorConfig.SensorId, Value: value, RecordedAt: sampleTime.Format(time.RFC3339)}
-		data = append(data, dataEntry)
+	// Clamp to min-max bounds
+	if value < sensorConfig.MinValue {
+		value = sensorConfig.MinValue
 	}
+	if value > sensorConfig.MaxValue {
+		value = sensorConfig.MaxValue
+	}
+	dataEntry := SensorData{SensorId: sensorConfig.SensorId, Value: value, RecordedAt: now.Format(time.RFC3339)}
+	data[0] = dataEntry
 
 	return data, nil
 }

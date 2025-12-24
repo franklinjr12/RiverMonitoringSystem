@@ -6,10 +6,10 @@
 #include <string.h>
 
 int main(void) {
-    setup();
+    app_setup();
 
     while(1) {
-        loop();
+        app_loop();
         return 0;
     }
     return 0;
