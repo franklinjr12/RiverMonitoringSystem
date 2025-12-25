@@ -11,7 +11,7 @@
 // helper function
 int _send_payload(char* readings_buffer_ptr);
 
-void setup() {
+void app_setup() {
     int ret;
     
     ret = setup_config();
@@ -47,7 +47,7 @@ void setup() {
     }
 }
 
-void loop() {
+void app_loop() {
     int ret = 0;
     float level_reading = 0;
     float temperature_reading = 0;
