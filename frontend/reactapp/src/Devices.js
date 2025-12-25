@@ -44,68 +44,80 @@ const Devices = () => {
   };
 
   const DeviceCard = ({ devices }) => {
-  return (
-    <Grid container spacing={3} sx={{ mt: 2 }}>
-      {devices.map((device) => {
-        const color = statusColor[device.status];
+    return (
+      <Grid container spacing={3} sx={{ mt: 2 }}>
+        {devices.map((device) => {
+          const statusText = device.status || 'unknown';
+          const color = statusColor[device.status] || '#9e9e9e'; // default grey
 
-        return (
-          <Grid item xs={12} sm={6} md={4} key={device.id}>
-            <Card
-              sx={{ m: 2, p: 2, cursor: "pointer" }}
-              onClick={() => handleCardClick(device.id)}
-            >
-              <CardContent>
+          const hasLastReadAt = !!device.last_read_at;
+          const lastReadText = hasLastReadAt
+            ? new Date(device.last_read_at).toLocaleString()
+            : 'No recent readings';
 
-                <Typography variant="h5" align="center">
-                  {device.name}
-                </Typography>
+          const hasLevel = device.last_level !== null && device.last_level !== undefined;
+          const hasTemperature = device.last_temperature !== null && device.last_temperature !== undefined;
 
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  align="center"
-                  sx={{ mb: 1 }}
-                >
-                  {device.location}
-                </Typography>
+          const levelText = hasLevel ? `${device.last_level}m` : 'N/A';
+          const temperatureText = hasTemperature ? `${device.last_temperature}°C` : 'N/A';
 
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  sx={{ mb: 1 }}
-                >
-                  <Box
-                    sx={{
-                      width: 10,
-                      height: 10,
-                      borderRadius: "50%",
-                      bgcolor: color,
-                      mr: 1
-                    }}
-                  />
-                  <Typography variant="body2" sx={{ textTransform: "capitalize" }}>
-                    {device.status}
+          return (
+            <Grid item xs={12} sm={6} md={4} key={device.id}>
+              <Card
+                sx={{ m: 2, p: 2, cursor: "pointer" }}
+                onClick={() => handleCardClick(device.id)}
+              >
+                <CardContent>
+
+                  <Typography variant="h5" align="center">
+                    {device.name || 'Unnamed device'}
                   </Typography>
-                </Box>
 
-                <Typography variant="body2" align="center">
-                  Last reading: {new Date(device.last_read_at).toLocaleString()}
-                </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    align="center"
+                    sx={{ mb: 1 }}
+                  >
+                    {device.location || 'Location not specified'}
+                  </Typography>
 
-                <Typography variant="body2" align="center">
-                  Level: {device.last_level}m | Temp: {device.last_temperature}°C
-                </Typography>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    sx={{ mb: 1 }}
+                  >
+                    <Box
+                      sx={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        bgcolor: color,
+                        mr: 1
+                      }}
+                    />
+                    <Typography variant="body2" sx={{ textTransform: "capitalize" }}>
+                      {statusText}
+                    </Typography>
+                  </Box>
 
-              </CardContent>
-            </Card>
-          </Grid>
-        );
-      })}
-    </Grid>
-  );
-};
+                  <Typography variant="body2" align="center">
+                    Last reading: {lastReadText}
+                  </Typography>
+
+                  <Typography variant="body2" align="center">
+                    Level: {levelText} | Temp: {temperatureText}
+                  </Typography>
+
+                </CardContent>
+              </Card>
+            </Grid>
+          );
+        })}
+      </Grid>
+    );
+  };
 
 
   return (

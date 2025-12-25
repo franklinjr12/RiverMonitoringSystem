@@ -14,6 +14,8 @@ backend/ruby/.env*
 # Ignore all logfiles and tempfiles.
 backend/ruby/log/*
 backend/ruby/tmp/*
+backend/ruby/build
+backend/ruby/vendor
 !backend/ruby/log/.keep
 !backend/ruby/tmp/.keep
 

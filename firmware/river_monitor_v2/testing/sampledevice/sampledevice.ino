@@ -2,8 +2,8 @@
 #include <WiFiClientSecure.h>
 #include <HTTPClient.h>
 
-const char* ssid = "ssid";
-const char* password = "pass";
+const char* ssid = "virus2g";
+const char* password = ".,senha,";
 
 const char* host = "https://rivermonitoringbackend.onrender.com";
 const int   port = 443;

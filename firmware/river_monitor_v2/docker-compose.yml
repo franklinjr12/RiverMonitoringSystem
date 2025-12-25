@@ -7,7 +7,7 @@ services:
     volumes:
       - ./:/app           # Hot-reload source into container
     working_dir: /app
-    # command: ["bash"]
-    command: "./river_monitor"
+    command: ["bash"]
+    # command: "./river_monitor"
     stdin_open: true
     tty: true
