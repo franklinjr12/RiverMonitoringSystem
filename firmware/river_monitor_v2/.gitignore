@@ -1,3 +1,5 @@
 kv.bin
 readings.csv
 river_monitor
+output/*
+!output/.keep

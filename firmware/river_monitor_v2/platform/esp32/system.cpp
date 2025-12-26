@@ -27,7 +27,7 @@ static Preferences preferences;
 //
 
 void panic(void) {
-    Serial.println("[PANIC] Unrecoverable error - restarting");
+    log_error("Unrecoverable error - restarting");
     delay(1000);
     ESP.restart();
     while(1) {} // Infinite loop as fallback
@@ -36,7 +36,7 @@ void panic(void) {
 int setup_storage(void) {
     // Initialize SPIFFS
     if (!SPIFFS.begin(true)) {
-        Serial.println("[ERROR] SPIFFS mount failed");
+        log_error("SPIFFS mount failed");
         return -1;
     }
     
@@ -46,7 +46,7 @@ int setup_storage(void) {
     // Create storage file if it doesn't exist
     File f = SPIFFS.open(STORAGE_FILE, "a");
     if (!f) {
-        Serial.println("[ERROR] Failed to create storage file");
+        log_error("Failed to create storage file");
         return -1;
     }
     f.close();
@@ -94,7 +94,7 @@ int read_kv(char* key, void* value, size_t value_size) {
 int write_config(Config* conf) {
     File f = SPIFFS.open(CONFIG_FILE, "w");
     if (!f) {
-        Serial.println("[ERROR] Failed to open config file for writing");
+        log_error("Failed to open config file for writing");
         return -1;
     }
 
@@ -115,7 +115,7 @@ int write_config(Config* conf) {
 int read_config(Config* conf) {
     File f = SPIFFS.open(CONFIG_FILE, "r");
     if (!f) {
-        Serial.println("[INFO] Config file does not exist, creating default");
+        log_info("Config file does not exist, creating default");
         // Config file missing → write defaults already contained in *conf
         return write_config(conf);
     }
@@ -171,7 +171,7 @@ int read_config(Config* conf) {
 
     const int num_attributes = 8;
     if (line_num != num_attributes) {
-        Serial.println("[ERROR] Failed to read all config attributes");
+        log_error("Failed to read all config attributes");
         return -1;
     }
 
@@ -216,7 +216,7 @@ int has_readings(unsigned int* readings_stored) {
 int write_sensor_readings(float level, float temperature, time_t at) {
     File f = SPIFFS.open(STORAGE_FILE, "a");
     if (!f) {
-        Serial.println("[ERROR] Failed to open storage file for appending");
+        log_error("Failed to open storage file for appending");
         return -1;
     }
 
@@ -261,7 +261,7 @@ int read_sensor_readings(
 int clear_readings() {
     File f = SPIFFS.open(STORAGE_FILE, "w");
     if (!f) {
-        Serial.println("[ERROR] Failed to open storage file for clearing");
+        log_error("Failed to open storage file for clearing");
         return -1;
     }
     f.close();
@@ -275,20 +275,18 @@ int setup_time(void) {
     // Configure NTP (same servers as sampledevice.ino)
     configTime(0, 0, "pool.ntp.org", "time.nist.gov");
     
-    Serial.println("[INFO] Waiting for NTP time sync");
+    log_info("Waiting for NTP time sync");
     int attempts = 0;
     while (!time(nullptr) && attempts < 30) {
         delay(1000);
-        Serial.print(".");
         attempts++;
     }
-    Serial.println();
     
     if (time(nullptr)) {
-        Serial.println("[INFO] NTP time synchronized");
+        log_info("NTP time synchronized");
         return NO_ERROR;
     } else {
-        Serial.println("[ERROR] Failed to sync NTP time");
+        log_error("Failed to sync NTP time");
         return -1;
     }
 }
@@ -323,7 +321,8 @@ int read_last_upload_time(time_t* out) {
 }
 
 int sleep_for(unsigned long seconds) {
-    delay(seconds * 1000); // Convert seconds to milliseconds
+    const unsigned long ms_factor = 1000;
+    delay(seconds * ms_factor);
     return NO_ERROR;
 }
 
