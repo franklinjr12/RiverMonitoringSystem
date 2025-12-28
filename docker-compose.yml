@@ -40,6 +40,7 @@ services:
     container_name: react_app
     environment:
       REACT_APP_BACKEND_HOST: http://localhost:3000
+      PUBLIC_URL: ""
     ports:
       - "3001:3001"
     volumes:

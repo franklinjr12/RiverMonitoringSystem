@@ -10,9 +10,11 @@ frontend_dir = File.join(project_root, 'frontend', 'reactapp')
 build_dir = File.join(frontend_dir, 'build')
 docs_dir = File.join(project_root, 'docs')
 
-# Step 1: Run npm build in frontend/reactapp
+# Step 1: Run npm build in frontend/reactapp with PUBLIC_URL for GitHub Pages
 puts "Running npm build in #{frontend_dir}..."
 Dir.chdir(frontend_dir) do
+  # Set PUBLIC_URL for GitHub Pages deployment
+  ENV['PUBLIC_URL'] = '/RiverMonitoringSystem'
   unless system('npm run build')
     puts "Error: npm build failed"
     exit 1
