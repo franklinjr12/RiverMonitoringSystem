@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import NeumorphicButton from './NeumorphicButton';
 import NeumorphicInput from './NeumorphicInput';
+import { toast } from 'react-toastify';
 
 const UserLogin = () => {
   const [username, setUsername] = useState('');
@@ -31,10 +32,10 @@ const UserLogin = () => {
       .then((data) => {
         setLoading(false);
         if (data["error"]) {
-          alert(data["error"]);
+          toast.error(data["error"]);
           return;
         }
-        alert("Login successful");
+        toast.success("Login successful");
         localStorage.setItem('sessionToken', data["token"]);
         navigate('/devices', { replace: true });
       })

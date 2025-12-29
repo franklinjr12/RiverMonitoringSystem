@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 const DemoUserLogin = () => {
@@ -17,10 +18,10 @@ const DemoUserLogin = () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data["error"]) {
-                    alert(data["error"]);
+                    toast.error(data["error"]);
                     return;
                 }
-                alert("Login successful");
+                toast.success("Login successful");
                 localStorage.setItem('userId', data["id"]);
                 navigate('/devices', { replace: true });
             })

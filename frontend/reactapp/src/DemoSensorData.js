@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const DemoSensorData = () => {
     const navigate = useNavigate();
@@ -16,10 +17,10 @@ const DemoSensorData = () => {
             .then((response) => response.json())
             .then((data) => {
                 if (data["error"]) {
-                    alert(data["error"]);
+                    toast.error(data["error"]);
                     return;
                 }
-                alert("Sensor data created");
+                toast.success("Sensor data created");
                 navigate('/devices', { replace: true });
             })
             .catch((error) => {

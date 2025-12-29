@@ -3,6 +3,7 @@ import Modal from '@mui/material/Modal';
 import { Box, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button } from '@mui/material';
 import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const style = {
     position: 'absolute',
@@ -33,7 +34,7 @@ const DeviceConfiguration = () => {
             .then(response => response.json())
             .then(data => setDeviceConfig(data))
             .catch(error => console.error('Error fetching device configuration:', error));
-    }, []);
+    }, [deviceId]);
 
     const [inputValue, setInputValue] = useState('');
     const [open, setOpen] = useState(false);
@@ -72,15 +73,15 @@ const DeviceConfiguration = () => {
         })
         .then(response => {
             if (response.ok) {
-                alert('Configuration updated successfully!');
+                toast.success('Configuration updated successfully!');
                 handleClose();
             } else {
-                alert('Failed to update configuration.');
+                toast.error('Failed to update configuration.');
             }
         })
         .catch(error => {
             console.error('Error updating configuration:', error);
-            alert('Error updating configuration.');
+            toast.error('Error updating configuration.');
         });
     };
 

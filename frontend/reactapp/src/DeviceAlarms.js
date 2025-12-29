@@ -3,6 +3,7 @@ import Modal from '@mui/material/Modal';
 import { Box, Typography, FormControl, InputLabel, Select, MenuItem, TextField, Button } from '@mui/material';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 const style = {
@@ -20,7 +21,6 @@ const style = {
 const DeviceAlarms = () => {
 
     const {deviceId} = useParams();
-    const [inputValue, setInputValue] = useState('');
     const [open, setOpen] = useState(false);
     const [showAlarmCreation, setShowAlarmCreation] = useState(false);
     const handleOpen = () => {
@@ -58,12 +58,12 @@ const DeviceAlarms = () => {
             .then(response => response.json())
             .then(data => setDeviceAlarms(data.map(alarm => JSON.stringify(alarm)).join('\n\n').replace(/":/g, '": ').replace(/",/g, '", ').replace(/[{}]/g, '')))
             .catch(error => console.error('Error fetching device alarms:', error));
-    }, []);
+    }, [deviceId]);
 
     const handleSend = () => {
         console.log('Trigger condition:', buildTriggerCondition());
         if (type === '' || condition === '' || value === '') {
-            alert('Please enter all fields.');
+            toast.warning('Please enter all fields.');
             return;
         }
         const host = process.env.REACT_APP_BACKEND_HOST;
@@ -80,15 +80,15 @@ const DeviceAlarms = () => {
         })
         .then(response => {
             if (response.ok) {
-                alert('Alarm created!');
+                toast.success('Alarm created!');
                 handleClose();
             } else {
-                alert('Failed to create alarm.');
+                toast.error('Failed to create alarm.');
             }
         })
         .catch(error => {
             console.error('Error creating alarm:', error);
-            alert('Failed to create alarm.');
+            toast.error('Failed to create alarm.');
         });
     };
 
