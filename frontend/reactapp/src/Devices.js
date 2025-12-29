@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Card, CardContent, Typography, Grid } from '@mui/material';
+import { Box, Card, CardContent, Typography, Grid, LinearProgress } from '@mui/material';
+import { DeviceCardsSkeleton } from './components/LoadingSkeleton';
 
 const Devices = () => {
   const [devices, setDevices] = useState([]);
@@ -126,10 +127,9 @@ const Devices = () => {
         <Typography variant="h6">River Monitoring System</Typography>
         <button style={{ padding: '10px', cursor: 'pointer' }} onClick={handleLogout}>Logout</button>
       </nav>
+      {loading && <LinearProgress sx={{ mb: 2 }} />}
       {loading ? (
-        <Typography variant="h6" component="p" style={{ marginTop: '20px' }}>
-          Loading...
-        </Typography>
+        <DeviceCardsSkeleton count={6} />
       ) : devices.length > 0 ? (
         <DeviceCard devices={devices}/>
       ) : (

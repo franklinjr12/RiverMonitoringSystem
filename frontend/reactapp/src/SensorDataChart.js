@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import moment from 'moment'
+import moment from 'moment';
+import { ChartSkeleton } from './components/LoadingSkeleton';
 
 const SensorDataChart = ({ dataSource, deviceId, startDate = null, endDate = null }) => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     const host = process.env.REACT_APP_BACKEND_HOST;
     let url = host + `/sensor_datum/index?device_id=${deviceId}`;
     if (startDate && endDate) {
@@ -23,6 +26,7 @@ const SensorDataChart = ({ dataSource, deviceId, startDate = null, endDate = nul
       .then(data => {
         if (!data[dataSource]) {
           console.error('Invalid data source:', dataSource);
+          setLoading(false);
           return;
         }
         const sensorData = data[dataSource].map(item => ({
@@ -30,9 +34,17 @@ const SensorDataChart = ({ dataSource, deviceId, startDate = null, endDate = nul
             [dataSource]: item.value
           }));
         setData(sensorData);
+        setLoading(false);
       })
-      .catch(error => console.error('Error fetching data:', error));
+      .catch(error => {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      });
   }, [dataSource, deviceId, startDate, endDate]);
+
+  if (loading) {
+    return <ChartSkeleton height={400} />;
+  }
 
   return (
     <ResponsiveContainer width="100%" height={400}>

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import NeumorphicButton from './NeumorphicButton';
 import NeumorphicInput from './NeumorphicInput';
 import { toast } from 'react-toastify';
+import { ButtonLoadingSpinner } from './components/LoadingSpinner';
 
 const UserLogin = () => {
   const [username, setUsername] = useState('');
@@ -67,6 +68,7 @@ const UserLogin = () => {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 autoComplete="username"
+                disabled={loading}
               />
             </Box>
             <Box display="flex" flexDirection="column" mb={2}>
@@ -76,9 +78,15 @@ const UserLogin = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 autoComplete="current-password"
+                disabled={loading}
               />
             </Box>
-            <NeumorphicButton type="submit">Log in</NeumorphicButton>
+            <NeumorphicButton type="submit" disabled={loading}>
+              <Box display="flex" alignItems="center" justifyContent="center">
+                {loading && <ButtonLoadingSpinner size={16} />}
+                {loading ? 'Logging in...' : 'Log in'}
+              </Box>
+            </NeumorphicButton>
           </form>
           )}
         </Box>

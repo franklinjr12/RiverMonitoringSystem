@@ -4,6 +4,7 @@ import { Box, Typography, FormControl, InputLabel, Select, MenuItem, TextField, 
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ButtonLoadingSpinner } from './components/LoadingSpinner';
 
 
 const style = {
@@ -34,6 +35,7 @@ const DeviceAlarms = () => {
     const [condition, setCondition] = useState('');
     const [value, setValue] = useState('');
     const [notificationEndpoint, setNotificationEndpoint] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const types = ['level', 'temperature'];
     const conditions = ['>', '<', '>=', '<=', '==', '!='];
@@ -66,6 +68,7 @@ const DeviceAlarms = () => {
             toast.warning('Please enter all fields.');
             return;
         }
+        setLoading(true);
         const host = process.env.REACT_APP_BACKEND_HOST;
         fetch(host + `/alarm/create?device_id=${deviceId}`, {
             method: 'POST',
@@ -79,6 +82,7 @@ const DeviceAlarms = () => {
             }),
         })
         .then(response => {
+            setLoading(false);
             if (response.ok) {
                 toast.success('Alarm created!');
                 handleClose();
@@ -88,6 +92,7 @@ const DeviceAlarms = () => {
         })
         .catch(error => {
             console.error('Error creating alarm:', error);
+            setLoading(false);
             toast.error('Failed to create alarm.');
         });
     };
@@ -191,8 +196,11 @@ const DeviceAlarms = () => {
                                     value={notificationEndpoint}
                                     onChange={handleNotificationEndpointInputChange}
                                 />
-                                <Button variant="contained" color="primary" onClick={handleSend}>
-                                    Create Alarm
+                                <Button variant="contained" color="primary" onClick={handleSend} disabled={loading}>
+                                    <Box display="flex" alignItems="center" justifyContent="center">
+                                        {loading && <ButtonLoadingSpinner size={16} />}
+                                        {loading ? 'Creating...' : 'Create Alarm'}
+                                    </Box>
                                 </Button>
                             </Box>
                         </Box>

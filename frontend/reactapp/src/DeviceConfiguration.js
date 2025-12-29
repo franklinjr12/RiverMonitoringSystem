@@ -4,6 +4,7 @@ import { Box, Typography, FormControl, InputLabel, Select, MenuItem, TextField, 
 import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ButtonLoadingSpinner } from './components/LoadingSpinner';
 
 const style = {
     position: 'absolute',
@@ -38,6 +39,7 @@ const DeviceConfiguration = () => {
 
     const [inputValue, setInputValue] = useState('');
     const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
     const handleOpen = () => {
         setOpen(true);
     }
@@ -57,6 +59,7 @@ const DeviceConfiguration = () => {
       };
 
     const handleSend = () => {
+        setLoading(true);
         const host = process.env.REACT_APP_BACKEND_HOST;
         fetch(host + `/device_configuration/create?device_id=${deviceId}`, {
             method: 'POST',
@@ -72,6 +75,7 @@ const DeviceConfiguration = () => {
             }),
         })
         .then(response => {
+            setLoading(false);
             if (response.ok) {
                 toast.success('Configuration updated successfully!');
                 handleClose();
@@ -81,6 +85,7 @@ const DeviceConfiguration = () => {
         })
         .catch(error => {
             console.error('Error updating configuration:', error);
+            setLoading(false);
             toast.error('Error updating configuration.');
         });
     };
@@ -120,8 +125,11 @@ const DeviceConfiguration = () => {
                         value={inputValue}
                         onChange={handleInputChange}
                     />
-                    <Button variant="contained" color="primary" onClick={handleSend}>
-                        Send
+                    <Button variant="contained" color="primary" onClick={handleSend} disabled={loading}>
+                        <Box display="flex" alignItems="center" justifyContent="center">
+                            {loading && <ButtonLoadingSpinner size={16} />}
+                            {loading ? 'Sending...' : 'Send'}
+                        </Box>
                     </Button>
                 </Box>
             </Modal>
