@@ -53,13 +53,19 @@ RUN apt-get update -qq && \
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /rails /rails
 
+# Copy entrypoint to a location that won't be overwritten by volume mounts
+# This avoids Windows line ending issues when the bin directory is mounted
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint-rails
+RUN chmod +x /usr/local/bin/docker-entrypoint-rails && \
+    sed -i "s/\r$//g" /usr/local/bin/docker-entrypoint-rails
+
 # Run and own only the runtime files as a non-root user for security
 RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
 USER rails:rails
 
 # Entrypoint prepares the database.
-ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-rails"]
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000 80 8080 443
