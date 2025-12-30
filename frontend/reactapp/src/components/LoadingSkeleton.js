@@ -43,3 +43,4 @@ const ChartSkeleton = ({ height = 400 }) => {
 
 export { DeviceCardSkeleton, DeviceCardsSkeleton, ChartSkeleton };
 
+
