@@ -33,11 +33,6 @@ const Devices = () => {
     navigate(`/device-sensors/${deviceId}`);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('userId');
-    navigate('/login');
-  }
-
   const statusColor = {
     online: "#4caf50",   // green
     delayed: "#ffb300",  // yellow
@@ -123,10 +118,6 @@ const Devices = () => {
 
   return (
     <Box>
-      <nav style={{ display: 'flex', justifyContent: 'space-between', padding: '10px', backgroundColor: '#f5f5f5' }}>
-        <Typography variant="h6">River Monitoring System</Typography>
-        <button style={{ padding: '10px', cursor: 'pointer' }} onClick={handleLogout}>Logout</button>
-      </nav>
       {loading && <LinearProgress sx={{ mb: 2 }} />}
       {loading ? (
         <DeviceCardsSkeleton count={6} />

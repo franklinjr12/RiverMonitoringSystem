@@ -38,6 +38,14 @@ const UserLogin = () => {
         }
         toast.success("Login successful");
         localStorage.setItem('sessionToken', data["token"]);
+        if (data["username"]) {
+          localStorage.setItem('username', data["username"]);
+        } else {
+          localStorage.setItem('username', username);
+        }
+        if (data["user_id"]) {
+          localStorage.setItem('userId', data["user_id"]);
+        }
         navigate('/devices', { replace: true });
       })
       .catch((error) => {

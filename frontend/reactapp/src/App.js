@@ -8,6 +8,7 @@ import DemoSensorData from './DemoSensorData';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NavigationBar from './components/NavigationBar';
 
 function App() {
   const repoBase = '/RiverMonitoringSystem';
@@ -15,8 +16,9 @@ function App() {
   const basename = process.env.PUBLIC_URL || (isGhPages ? repoBase : '/');
   return (
     <div className="App">
-      <main>
-        <Router basename={basename}>
+      <Router basename={basename}>
+        <NavigationBar />
+        <main>
           <Routes>
             <Route path="/" element={<UserLogin />} />
             <Route path="/login" element={<UserLogin />} />
@@ -26,7 +28,7 @@ function App() {
             <Route path="/demo" element={<DemoUserLogin />} />
             <Route path="/demo/create_sensor_data" element={<DemoSensorData />} />
           </Routes>
-        </Router>
+        </main>
         <ToastContainer
           position="top-right"
           autoClose={3000}
@@ -39,7 +41,7 @@ function App() {
           pauseOnHover
           theme="light"
         />
-      </main>
+      </Router>
     </div>
   );
 }
