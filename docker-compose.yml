@@ -50,5 +50,14 @@ services:
     stdin_open: true
     tty: true
 
+  build_frontend:
+  # run with: docker compose run --rm build_frontend
+    build:
+      context: ./scripts
+      dockerfile: Dockerfile
+    container_name: frontend_builder
+    volumes:
+      - .:/workspace
+
 volumes:
   postgres_data:
