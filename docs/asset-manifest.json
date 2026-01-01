@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/RiverMonitoringSystem/static/css/main.2243d0a5.css",
-    "main.js": "/RiverMonitoringSystem/static/js/main.fb45431f.js",
+    "main.css": "/RiverMonitoringSystem/static/css/main.90cdafd7.css",
+    "main.js": "/RiverMonitoringSystem/static/js/main.06922d5a.js",
     "index.html": "/RiverMonitoringSystem/index.html",
-    "main.2243d0a5.css.map": "/RiverMonitoringSystem/static/css/main.2243d0a5.css.map",
-    "main.fb45431f.js.map": "/RiverMonitoringSystem/static/js/main.fb45431f.js.map"
+    "main.90cdafd7.css.map": "/RiverMonitoringSystem/static/css/main.90cdafd7.css.map",
+    "main.06922d5a.js.map": "/RiverMonitoringSystem/static/js/main.06922d5a.js.map"
   },
   "entrypoints": [
-    "static/css/main.2243d0a5.css",
-    "static/js/main.fb45431f.js"
+    "static/css/main.90cdafd7.css",
+    "static/js/main.06922d5a.js"
   ]
 }
