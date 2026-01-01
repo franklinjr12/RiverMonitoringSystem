@@ -64,6 +64,9 @@ RUN useradd rails --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
 USER rails:rails
 
+# always remove server.pid file if it exists
+RUN if [ -f tmp/pids/server.pid ]; then rm tmp/pids/server.pid; fi
+
 # Entrypoint prepares the database.
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint-rails"]
 
