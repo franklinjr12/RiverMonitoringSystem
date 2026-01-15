@@ -5,6 +5,7 @@ import SensorDataChart from './SensorDataChart';
 import DeviceConfiguration from './DeviceConfiguration';
 import DeviceAlarms from './DeviceAlarms';
 import DownloadGraphDataButton from './DownloadGraphDataButton';
+import DateRangePicker from './components/DateRangePicker';
 import './Device.css';
 
 const Device = () => {
@@ -27,20 +28,12 @@ const Device = () => {
             <DeviceConfiguration deviceId={deviceId} />
             <DeviceAlarms deviceId={deviceId} />
           </Box>
-          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-            <input 
-              type="date" 
-              value={startDate || ''} 
-              onChange={(e) => setStartDate(e.target.value)}
-              style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-            />
-            <input 
-              type="date" 
-              value={endDate || ''} 
-              onChange={(e) => setEndDate(e.target.value)}
-              style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-            />
-          </Box>
+          <DateRangePicker
+            startDate={startDate}
+            endDate={endDate}
+            onStartDateChange={setStartDate}
+            onEndDateChange={setEndDate}
+          />
         </Box>
         <Box>
           <Box style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
