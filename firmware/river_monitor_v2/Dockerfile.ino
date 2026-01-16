@@ -1,7 +1,7 @@
 # build with
 # docker build -f Dockerfile.ino -t river_monitor_v2 .
 # run with (mounts host output folder to container)
-# docker run -v $(pwd)/output:/app/output river_monitor_v2
+# docker run -v "$(pwd)/output:/app/output" river_monitor_v2
 
 FROM ubuntu:latest
 
